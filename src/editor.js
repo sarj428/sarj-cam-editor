@@ -1189,8 +1189,15 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification('WebM video render completed successfully!', 'success');
       },
       onError: (err) => {
+        renderStatusTitle.textContent = 'RENDER FAILED';
+        renderStatusMessage.textContent = 'An error occurred during video rendering.';
+        renderStatusSubtitle.textContent = err.message || 'Media encoding failed.';
+        renderStatusIcon.innerHTML =
+          '<span class="material-symbols-outlined" style="color:#ec648c; font-size:64px;">error</span>';
         showNotification(`Render error: ${err.message}`, 'error');
-        closeRenderOverlay();
+        setTimeout(() => {
+          closeRenderOverlay();
+        }, 3000);
       }
     });
   });
