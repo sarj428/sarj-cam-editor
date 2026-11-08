@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function pad(n) { return String(n).padStart(2, '0'); }
   let timecodeInterval = setInterval(updateTimecode, 33.3);
 
+  window.addEventListener('beforeunload', () => {
+    if (timecodeInterval) clearInterval(timecodeInterval);
+  });
+
   /* ─────────────────────────────────────────────────────────
      2. REC / PAUSE TOGGLE
   ───────────────────────────────────────────────────────── */
