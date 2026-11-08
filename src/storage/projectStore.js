@@ -10,9 +10,26 @@ const STORE_NAME = 'projects';
 /** @type {IDBDatabase|null} */
 let dbInstance = null;
 
+/**
+ * Checks whether native IndexedDB is available in the current environment.
+ * @returns {boolean}
+ */
+function checkIndexedDBSupport() {
+  if (typeof window !== 'undefined' && 'indexedDB' in window && window.indexedDB !== null) {
+    return true;
+  }
+  if (
+    typeof globalThis !== 'undefined' &&
+    'indexedDB' in globalThis &&
+    globalThis.indexedDB !== null
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /** @type {boolean} */
-let isDbAvailable =
-  typeof window !== 'undefined' && 'indexedDB' in window && window.indexedDB !== null;
+let isDbAvailable = checkIndexedDBSupport();
 
 /** @type {Map<string, object>} */
 const inMemoryFallbackStore = new Map();
@@ -31,6 +48,7 @@ export function isStorageAvailable() {
  * @returns {Promise<{ success: boolean, inMemory: boolean }>}
  */
 export function initProjectStore() {
+  isDbAvailable = checkIndexedDBSupport();
   return new Promise((resolve) => {
     if (!isDbAvailable) {
       console.warn(
