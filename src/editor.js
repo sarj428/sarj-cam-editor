@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createId() {
-    return 'id_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    return 'id_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
   }
 
   /* ─────────────────────────────────────────────────────────
@@ -423,8 +423,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     ctx.font = "bold 20px 'JetBrains Mono', monospace";
-    ctx.fillStyle = "var(--color-cyan)";
-    ctx.shadowColor = "var(--color-cyan)";
+    ctx.fillStyle = "#2ddbde";
+    ctx.shadowColor = "#2ddbde";
     ctx.shadowBlur = 6;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
