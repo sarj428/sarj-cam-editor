@@ -27,7 +27,7 @@ SARJ-CAM is a lightweight, zero-framework client-side video editor crafted to de
 >
 > 1. Open `http://localhost:5173/editor.html`
 > 2. Upload a sample clip (10–15 seconds, 1080p or 720p).
-> 3. Record a 15-second screen capture demonstrating filter switching (VHS Glitch), timeline splitting, and title overlay creation. Convert to GIF or MP4 and place into `docs/demo.gif`.
+> 3. Record a 15-second screen capture demonstrating filter switching (VHS Cyber), timeline splitting, and title overlay creation. Convert to GIF or MP4 and place into `docs/demo.gif`.
 
 ```
 +-------------------------------------------------------------------------+
@@ -52,7 +52,7 @@ Every feature listed below is implemented and tested in the codebase without ext
   - Synchronous `requestAnimationFrame` frame pipeline with aspect-ratio letterboxing calculation (`computeLetterbox`).
   - Standby dynamic grid rendering with timecode displays prior to asset loading.
 - **Retro Filter Presets & Shader Passes:**
-  - 4 distinct presets: **VHS Glitch**, **Cyberpunk 2084**, **Noir 1940**, and **Raw / Neutral**.
+  - 4 retro filter presets (**CRT Scanlines**, **VHS Cyber**, **Neon Glitch**, **Retro Mono**) plus a neutral **None** setting.
   - Direct canvas scanline pass rendering (`renderScanlines`) via programmatic `createImageData` / raster scanlines.
 - **Dynamic Text Overlay Sequencing:**
   - Modal with strict Tab focus trapping and Escape-to-close accessibility handlers.
@@ -155,21 +155,38 @@ editor/
 
 ---
 
-## ⚡ Performance & Bundle Metrics
+## ⚡ Performance & Quality
 
-Measurements taken directly from the production build (`vite build`):
+### Lighthouse Audit Scores (Tested via Headless Chrome / Lighthouse 12 on Netlify Production Deployment)
 
-| Asset                 | Size        | Gzip Size   | Load Strategy                                   |
-| --------------------- | ----------- | ----------- | ----------------------------------------------- |
-| `editor.html`         | 30.33 kB    | 5.64 kB     | Direct document load                            |
-| `index.html`          | 28.48 kB    | 5.55 kB     | Direct document load                            |
-| `style.css`           | 61.18 kB    | 10.54 kB    | Render-blocking stylesheet with CSS variables   |
-| `editor.js`           | 36.11 kB    | 11.82 kB    | Main editor script                              |
-| `main.js`             | 5.42 kB     | 2.12 kB     | Landing page script only (separate entry point) |
-| **`exportRender.js`** | **2.54 kB** | **1.21 kB** | **Lazy-loaded on demand (`dynamic import`)**    |
+| Page                   | Form Factor        | Performance | Accessibility | Best Practices | SEO     |
+| ---------------------- | ------------------ | ----------- | ------------- | -------------- | ------- |
+| `index.html` (Landing) | Desktop            | **74**      | **94**        | **96**         | **100** |
+| `index.html` (Landing) | Mobile (Throttled) | **67**      | **94**        | **100**        | **100** |
+| `editor.html` (Studio) | Desktop            | **87**      | **84**        | **100**        | **100** |
+| `editor.html` (Studio) | Mobile (Throttled) | **74**      | **84**        | **96**         | **100** |
 
-- **Zero Runtime Dependencies:** Built strictly using native Web APIs.
-- **Asset Optimization:** Legacy 6.4 MB GIF replaced with optimized `<video>` element (`.webm` at 435 kB, `.mp4` at 920 kB), reducing hero asset weight by over 93%.
+_Note: In-editor mobile accessibility reflects deliberate design choices (complex timeline editor requiring minimum desktop/tablet resolution, where a mobile advisory banner is surfaced to users)._
+
+### Production Bundle Metrics (`vite build`)
+
+| Asset                 | Size        | Gzip Size   | Load Strategy                                                |
+| --------------------- | ----------- | ----------- | ------------------------------------------------------------ |
+| `editor.html`         | 30.33 kB    | 5.64 kB     | Direct document load                                         |
+| `index.html`          | 29.02 kB    | 5.60 kB     | Direct document load                                         |
+| `style.css`           | 61.17 kB    | 10.54 kB    | Primary stylesheet with CSS design tokens                    |
+| `editor.js`           | 36.49 kB    | 11.91 kB    | Core studio orchestrator                                     |
+| `main.js`             | 5.42 kB     | 2.12 kB     | Landing page script only (separate entry point)              |
+| **`exportRender.js`** | **2.54 kB** | **1.21 kB** | **Code-split chunk loaded on demand via dynamic `import()`** |
+
+### Test Suite & Code Coverage (Vitest v8)
+
+- **Unit Tests:** 44 passing tests across 4 test suites (`validation`, `timeline`, `filters_and_utils`, `projectStore`).
+- **Core Pure Logic Coverage:** **84.11%** lines, **84.48%** branches (100% lines on `timeline.js`, `validation.js`, and `ids.js`).
+- **Total Codebase Coverage:** **12.61%** lines across all files including DOM-heavy UI and WebGL/Canvas rendering loops.
+
+- **Zero Runtime Dependencies:** Pure browser APIs (Canvas 2D Context, MediaRecorder, IndexedDB, Web Audio).
+- **Asset Optimization:** Replaced legacy 6.4 MB GIF with an HTML5 `<video>` tag (`.webm` 435 kB, `.mp4` 920 kB), reducing hero asset payload by 93.5%. Added HTTP caching headers via `netlify.toml` for 1-year immutable caching on hashed assets.
 
 ---
 
