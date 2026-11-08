@@ -251,21 +251,21 @@
           <!-- Video Playback HUD Controls (Similar to Canva underneath canvas look) -->
           <div class="playback-controls-hud">
             <div class="hud-left">
-              <button class="hud-btn" id="hud-btn-rewind" title="Rewind 5s">
+              <button class="hud-btn" id="hud-btn-rewind" title="Rewind 5s" aria-label="Rewind 5 seconds">
                 <span class="material-symbols-outlined">fast_rewind</span>
               </button>
             </div>
             
             <div class="hud-center">
               <span class="hud-timecode" id="hud-current-time">00:00.00</span>
-              <button class="hud-btn play-pause-btn" id="hud-btn-play-pause" title="Play / Pause">
+              <button class="hud-btn play-pause-btn" id="hud-btn-play-pause" title="Play / Pause" aria-label="Play or pause video">
                 <span class="material-symbols-outlined" id="play-pause-icon">play_arrow</span>
               </button>
               <span class="hud-timecode" id="hud-total-duration">00:00.00</span>
             </div>
 
             <div class="hud-right">
-              <button class="hud-btn" id="hud-btn-forward" title="Forward 5s">
+              <button class="hud-btn" id="hud-btn-forward" title="Forward 5s" aria-label="Forward 5 seconds">
                 <span class="material-symbols-outlined">fast_forward</span>
               </button>
             </div>
@@ -302,12 +302,12 @@
             </div>
 
             <div class="property-group">
-              <label class="property-label">System Volume</label>
+              <label class="property-label" for="hud-volume-slider">System Volume</label>
               <div class="volume-inspector-row">
-                <button class="hud-btn" id="hud-btn-mute" title="Toggle Mute">
+                <button class="hud-btn" id="hud-btn-mute" title="Toggle Mute" aria-label="Toggle mute audio">
                   <span class="material-symbols-outlined" id="mute-icon">volume_up</span>
                 </button>
-                <input type="range" id="hud-volume-slider" min="0" max="1" step="0.05" value="0.8" class="hud-slider" style="flex-grow:1;" />
+                <input type="range" id="hud-volume-slider" min="0" max="1" step="0.05" value="0.8" class="hud-slider" aria-label="Volume level" style="flex-grow:1;" />
               </div>
             </div>
           </div>
@@ -364,7 +364,7 @@
           
           <div class="toolbar-right">
             <span class="timeline-zoom-label"><span class="material-symbols-outlined">zoom_in</span> Zoom</span>
-            <input type="range" id="timeline-zoom-slider" min="1" max="5" value="2" step="0.5" class="hud-slider" style="width: 100px;" />
+            <input type="range" id="timeline-zoom-slider" min="1" max="5" value="2" step="0.5" class="hud-slider" aria-label="Timeline zoom level" style="width: 100px;" />
           </div>
         </div>
 
@@ -471,7 +471,7 @@
     <div class="text-modal-card">
       <div class="modal-header">
         <h3>Edit Title Properties</h3>
-        <button class="btn-close-modal" id="btn-modal-close"><span class="material-symbols-outlined">close</span></button>
+        <button class="btn-close-modal" id="btn-modal-close" aria-label="Close modal"><span class="material-symbols-outlined">close</span></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="modal-text-id" />

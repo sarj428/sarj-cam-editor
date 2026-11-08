@@ -3927,3 +3927,95 @@ body {
   border-color: var(--color-cyan-medium);
   border-style: solid;
 }
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSIVE ENHANCEMENTS FOR TABLET (768px) AND MOBILE (375px)
+   ───────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .editor-workspace {
+    height: auto;
+    min-height: 100vh;
+    padding: 0 8px 80px 8px;
+    overflow-y: auto;
+  }
+
+  .editor-body {
+    height: auto;
+    overflow: auto;
+  }
+
+  .editor-interface-container {
+    flex-direction: column;
+    padding-bottom: 24px;
+  }
+
+  .editor-side-dock {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 8px;
+  }
+
+  .editor-drawer-panel {
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
+  .editor-sidebar-right {
+    width: 100%;
+  }
+
+  .timeline-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .outer-frame {
+    border-width: 3px;
+    margin: 4px;
+  }
+
+  .nav-logo {
+    font-size: 14px;
+  }
+
+  .playback-controls-hud {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .hud-timecode {
+    font-size: 11px;
+  }
+
+  .timeline-track-labels {
+    width: 70px;
+    font-size: 10px;
+  }
+}
+
+/* Accessible focus visible outlines */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid var(--color-cyan, #2ddbde) !important;
+  outline-offset: 2px !important;
+}
+
+/* Toast animation */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
