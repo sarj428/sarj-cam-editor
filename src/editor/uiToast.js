@@ -104,4 +104,3 @@ export function showNotification(message, type = 'info', duration = 4500) {
 
   container.appendChild(toast);
 }
-

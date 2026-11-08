@@ -21,7 +21,7 @@ export function setStatusText(text, theme = 'green') {
  * @param {string} dataAttr
  */
 export function setActiveToggle(elements, value, dataAttr) {
-  elements.forEach(btn => {
+  elements.forEach((btn) => {
     if (btn.getAttribute(`data-${dataAttr}`) === value) {
       btn.classList.add('active');
     } else {
@@ -59,7 +59,10 @@ export function addTilt(el, strength = 8) {
  */
 export function setupAccessibleModal(modalBackdrop, closeButton, onClose) {
   const handleKeyDown = (e) => {
-    if (modalBackdrop.classList.contains('hidden') || modalBackdrop.getAttribute('aria-hidden') === 'true') {
+    if (
+      modalBackdrop.classList.contains('hidden') ||
+      modalBackdrop.getAttribute('aria-hidden') === 'true'
+    ) {
       return;
     }
 
@@ -134,4 +137,3 @@ export function checkMobileResponsiveness() {
     if (existing) existing.remove();
   }
 }
-

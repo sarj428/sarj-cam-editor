@@ -30,7 +30,7 @@ export function startPlayback(videoElement, project, onFrame, onStateChange) {
   }
 
   videoElement.currentTime = timelineToSourceTime(curTime, project.clips);
-  videoElement.play().catch(err => {
+  videoElement.play().catch((err) => {
     console.warn('[Playback] Play prevented by browser autoplay policy:', err);
     pausePlayback(videoElement, onStateChange);
   });
@@ -107,4 +107,3 @@ export function seekTimeline(targetTime, videoElement, project, onRenderFrame) {
 
   if (onRenderFrame) onRenderFrame();
 }
-

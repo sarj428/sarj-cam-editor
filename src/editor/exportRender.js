@@ -5,7 +5,11 @@
 import { computeLetterbox } from './canvasRenderer.js';
 import { getCssFilterString, renderScanlines } from './filters.js';
 import { drawTextOverlays } from './canvasRenderer.js';
-import { getTotalTimelineDuration, timelineToSourceTime, sourceToTimelineTime } from './timeline.js';
+import {
+  getTotalTimelineDuration,
+  timelineToSourceTime,
+  sourceToTimelineTime
+} from './timeline.js';
 
 /**
  * Checks whether the current browser supports HTML5 Canvas video export.
@@ -17,14 +21,16 @@ export function checkRenderSupport() {
   }
 
   const canvas = document.createElement('canvas');
-  const hasCaptureStream = typeof canvas.captureStream === 'function' ||
-                           // @ts-ignore
-                           typeof canvas.mozCaptureStream === 'function';
+  const hasCaptureStream =
+    typeof canvas.captureStream === 'function' ||
+    // @ts-ignore
+    typeof canvas.mozCaptureStream === 'function';
 
   if (!hasCaptureStream) {
     return {
       supported: false,
-      error: 'Canvas captureStream API is not supported in this browser. Please use Chrome, Edge, or Firefox.'
+      error:
+        'Canvas captureStream API is not supported in this browser. Please use Chrome, Edge, or Firefox.'
     };
   }
 
@@ -98,12 +104,18 @@ export function startExportRender({
   }
 
   // @ts-ignore
-  const stream = exportCanvas.captureStream ? exportCanvas.captureStream(30) : exportCanvas.mozCaptureStream(30);
+  const stream = exportCanvas.captureStream
+    ? exportCanvas.captureStream(30)
+    : exportCanvas.mozCaptureStream(30);
 
   // Capture audio track if available
   try {
     // @ts-ignore
-    const audioStream = videoElement.captureStream ? videoElement.captureStream() : (videoElement.mozCaptureStream ? videoElement.mozCaptureStream() : null);
+    const audioStream = videoElement.captureStream
+      ? videoElement.captureStream()
+      : videoElement.mozCaptureStream
+        ? videoElement.mozCaptureStream()
+        : null;
     if (audioStream) {
       const audioTracks = audioStream.getAudioTracks();
       if (audioTracks.length > 0) {
@@ -147,7 +159,7 @@ export function startExportRender({
   videoElement.currentTime = timelineToSourceTime(0, project.clips);
 
   mediaRecorder.start();
-  videoElement.play().catch(err => {
+  videoElement.play().catch((err) => {
     console.warn('[ExportRender] Video playback start issue during render:', err);
   });
 
@@ -187,7 +199,13 @@ export function startExportRender({
       renderScanlines(expCtx, exportCanvas.width, exportCanvas.height);
     }
 
-    drawTextOverlays(expCtx, project.texts, currentRenderTime, exportCanvas.width, exportCanvas.height);
+    drawTextOverlays(
+      expCtx,
+      project.texts,
+      currentRenderTime,
+      exportCanvas.width,
+      exportCanvas.height
+    );
 
     const progress = Math.min(100, Math.floor((currentRenderTime / durationTotal) * 100));
     onProgress(progress);
@@ -204,4 +222,3 @@ export function startExportRender({
     }
   };
 }
-

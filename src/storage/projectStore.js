@@ -11,7 +11,8 @@ const STORE_NAME = 'projects';
 let dbInstance = null;
 
 /** @type {boolean} */
-let isDbAvailable = typeof window !== 'undefined' && 'indexedDB' in window && window.indexedDB !== null;
+let isDbAvailable =
+  typeof window !== 'undefined' && 'indexedDB' in window && window.indexedDB !== null;
 
 /** @type {Map<string, object>} */
 const inMemoryFallbackStore = new Map();
@@ -32,7 +33,9 @@ export function isStorageAvailable() {
 export function initProjectStore() {
   return new Promise((resolve) => {
     if (!isDbAvailable) {
-      console.warn('[ProjectStore] IndexedDB is not supported in this environment. Falling back to in-memory store.');
+      console.warn(
+        '[ProjectStore] IndexedDB is not supported in this environment. Falling back to in-memory store.'
+      );
       return resolve({ success: true, inMemory: true });
     }
 
@@ -40,7 +43,10 @@ export function initProjectStore() {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
 
       request.onerror = (e) => {
-        console.warn('[ProjectStore] IndexedDB open error (likely private mode or quota limit):', e);
+        console.warn(
+          '[ProjectStore] IndexedDB open error (likely private mode or quota limit):',
+          e
+        );
         isDbAvailable = false;
         resolve({ success: false, inMemory: true });
       };
@@ -148,7 +154,11 @@ export function getProject(id) {
 export function saveProject(project) {
   return new Promise((resolve) => {
     if (!project || !project.id) {
-      return resolve({ success: false, inMemory: !isDbAvailable, error: 'Project must contain a valid ID' });
+      return resolve({
+        success: false,
+        inMemory: !isDbAvailable,
+        error: 'Project must contain a valid ID'
+      });
     }
 
     // Always keep in-memory fallback updated
@@ -170,11 +180,19 @@ export function saveProject(project) {
       request.onerror = (e) => {
         const target = /** @type {IDBRequest} */ (e.target);
         console.warn('[ProjectStore] Save error in IndexedDB:', target.error);
-        resolve({ success: true, inMemory: true, error: target.error ? target.error.message : 'Database write error' });
+        resolve({
+          success: true,
+          inMemory: true,
+          error: target.error ? target.error.message : 'Database write error'
+        });
       };
     } catch (err) {
       console.warn('[ProjectStore] Save transaction error:', err);
-      resolve({ success: true, inMemory: true, error: err instanceof Error ? err.message : String(err) });
+      resolve({
+        success: true,
+        inMemory: true,
+        error: err instanceof Error ? err.message : String(err)
+      });
     }
   });
 }
@@ -205,4 +223,3 @@ export function deleteProject(id) {
     }
   });
 }
-

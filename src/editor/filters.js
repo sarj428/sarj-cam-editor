@@ -55,7 +55,14 @@ export function getCssFilterString(filterKey) {
  * @param {number} [alpha=0.13] - Opacity of each scanline.
  * @param {number} [randomSeed=Math.random()] - Deterministic or random trigger for glitch pulses.
  */
-export function renderScanlines(ctx, width, height, lineSpacing = 3, alpha = 0.13, randomSeed = Math.random()) {
+export function renderScanlines(
+  ctx,
+  width,
+  height,
+  lineSpacing = 3,
+  alpha = 0.13,
+  randomSeed = Math.random()
+) {
   ctx.save();
   ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
   for (let y = 0; y < height; y += lineSpacing) {
@@ -65,10 +72,9 @@ export function renderScanlines(ctx, width, height, lineSpacing = 3, alpha = 0.1
   // Occasional subtle glitch line
   if (randomSeed < 0.05) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-    const glitchY = (randomSeed * 20) * height % height;
-    const glitchHeight = (randomSeed * 100) % 6 + 2;
+    const glitchY = (randomSeed * 20 * height) % height;
+    const glitchHeight = ((randomSeed * 100) % 6) + 2;
     ctx.fillRect(0, glitchY, width, glitchHeight);
   }
   ctx.restore();
 }
-

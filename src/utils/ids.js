@@ -12,4 +12,3 @@ export function createId(prefix = 'id') {
   const rand = Math.random().toString(36).substring(2, 11);
   return `${prefix}_${rand}_${Date.now()}`;
 }
-

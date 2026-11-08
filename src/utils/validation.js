@@ -17,7 +17,7 @@ export function validateVideoFile(file, maxSizeBytes = MAX_VIDEO_SIZE_BYTES) {
   }
 
   const isVideoMime = typeof file.type === 'string' && file.type.startsWith('video/');
-  const fileName = (file && file.name) ? file.name : '';
+  const fileName = file && file.name ? file.name : '';
   const hasVideoExtension = /\.(mp4|webm|mov|ogg|mkv|m4v)$/i.test(fileName);
 
   if (!isVideoMime && !hasVideoExtension) {
@@ -57,7 +57,10 @@ export function validateTimeRange(start, end, maxDuration = Infinity) {
     return { isValid: false, error: 'End time must be greater than start time.' };
   }
   if (isFinite(maxDuration) && maxDuration > 0 && start >= maxDuration) {
-    return { isValid: false, error: `Start time (${start.toFixed(1)}s) cannot exceed total duration (${maxDuration.toFixed(1)}s).` };
+    return {
+      isValid: false,
+      error: `Start time (${start.toFixed(1)}s) cannot exceed total duration (${maxDuration.toFixed(1)}s).`
+    };
   }
   return { isValid: true };
 }
@@ -74,7 +77,10 @@ export function validateProjectJson(config) {
 
   const obj = /** @type {Record<string, unknown>} */ (config);
   if (!obj.sarjcam_project) {
-    return { isValid: false, error: 'Invalid project file: missing SARJ-CAM project signature header.' };
+    return {
+      isValid: false,
+      error: 'Invalid project file: missing SARJ-CAM project signature header.'
+    };
   }
 
   if (!Array.isArray(obj.clips)) {
@@ -83,4 +89,3 @@ export function validateProjectJson(config) {
 
   return { isValid: true };
 }
-

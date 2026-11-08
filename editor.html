@@ -1,547 +1,733 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO Optimization -->
+    <title>SARJ-CAM - Retro Video Editor Studio</title>
+    <meta
+      name="description"
+      content="Browser-based retro video editor studio. Trim footage, apply CRT and VHS filters, add title text overlays, and export WebM."
+    />
 
-  <!-- SEO Optimization -->
-  <title>SARJ-CAM - Retro Video Editor Studio</title>
-  <meta name="description"
-    content="Browser-based retro video editor studio. Trim footage, apply CRT and VHS filters, add title text overlays, and export WebM." />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://editingapp.netlify.app/editor.html" />
+    <meta property="og:title" content="SARJ-CAM - Retro Video Editor Studio" />
+    <meta
+      property="og:description"
+      content="Browser-based retro video editor studio with tactile controls, Canvas filters, and WebM export."
+    />
+    <meta property="og:image" content="https://editingapp.netlify.app/preview.jpg" />
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://editingapp.netlify.app/editor.html" />
-  <meta property="og:title" content="SARJ-CAM - Retro Video Editor Studio" />
-  <meta property="og:description"
-    content="Browser-based retro video editor studio with tactile controls, Canvas filters, and WebM export." />
-  <meta property="og:image" content="https://editingapp.netlify.app/preview.jpg" />
+    <!-- Preloads & Font Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Preloads & Font Preconnects -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
 
-  <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="/src/style.css" />
-</head>
+  <body class="editor-body">
+    <!-- Floating Ambient Orbs (Retro-futuristic background elements) -->
+    <div class="ambient-orbs" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
 
-<body class="editor-body">
-
-  <!-- Floating Ambient Orbs (Retro-futuristic background elements) -->
-  <div class="ambient-orbs" aria-hidden="true">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
-
-  <!-- Outer Monitor Frame (Simulates viewfinder frame) -->
-  <div class="outer-frame">
-
-    <!-- Editor Navigation Bar -->
-    <nav class="navbar" id="editor-navbar">
-      <div class="nav-logo">
-        <a href="/index.html" class="logo-link" style="text-decoration: none;">
-          <span class="logo-accent">SARJ</span> - STUDIO
-        </a>
-      </div>
-
-      <!-- Quick Status Indicators -->
-      <div class="editor-status-badge" id="editor-status">
-        <span class="status-dot green"></span>
-        <span class="status-text">SYSTEM: ONLINE</span>
-      </div>
-
-      <div class="nav-actions">
-        <button class="btn btn-secondary btn-animated" id="btn-new-project">
-          <span class="btn-text-inner">
-            <span class="btn-label"><span class="material-symbols-outlined">add</span> New Project</span>
-            <span class="btn-label-clone"><span class="material-symbols-outlined">add</span> New Project</span>
-          </span>
-        </button>
-        <a href="/index.html" class="btn btn-secondary btn-animated" id="btn-back-home">
-          <span class="btn-text-inner">
-            <span class="btn-label"><span class="material-symbols-outlined">arrow_back</span> Home</span>
-            <span class="btn-label-clone"><span class="material-symbols-outlined">arrow_back</span> Home</span>
-          </span>
-        </a>
-      </div>
-    </nav>
-
-    <!-- Main Workspace Layout -->
-    <main class="editor-workspace">
-      
-      <!-- Canva-style horizontal editor container -->
-      <div class="editor-interface-container">
-        
-        <!-- SIDE DOCK (Canva-style Slim Sidebar) -->
-        <div class="editor-side-dock">
-          <button class="dock-btn active" data-tab="uploads" title="Upload Media">
-            <span class="material-symbols-outlined">cloud_upload</span>
-            <span class="dock-label">Uploads</span>
-          </button>
-          <button class="dock-btn" data-tab="filters" title="Retro Filters">
-            <span class="material-symbols-outlined">palette</span>
-            <span class="dock-label">Filters</span>
-          </button>
-          <button class="dock-btn" data-tab="text" title="Text Titles">
-            <span class="material-symbols-outlined">title</span>
-            <span class="dock-label">Text</span>
-          </button>
-          <button class="dock-btn" data-tab="projects" title="Saved Projects">
-            <span class="material-symbols-outlined">folder_open</span>
-            <span class="dock-label">Projects</span>
-          </button>
+    <!-- Outer Monitor Frame (Simulates viewfinder frame) -->
+    <div class="outer-frame">
+      <!-- Editor Navigation Bar -->
+      <nav class="navbar" id="editor-navbar">
+        <div class="nav-logo">
+          <a href="/index.html" class="logo-link" style="text-decoration: none">
+            <span class="logo-accent">SARJ</span> - STUDIO
+          </a>
         </div>
 
-        <!-- COLLAPSIBLE DRAWER PANEL -->
-        <div class="editor-drawer-panel" id="editor-drawer">
-          
-          <!-- Tab Content 1: Uploads -->
-          <div class="drawer-tab-content active" id="tab-content-uploads">
-            <h2 class="drawer-title">Media Uploads</h2>
-            
-            <div class="search-bar-wrapper">
-              <span class="material-symbols-outlined search-icon">search</span>
-              <input type="text" placeholder="Search your media..." class="search-input" id="media-search-input" />
-            </div>
+        <!-- Quick Status Indicators -->
+        <div class="editor-status-badge" id="editor-status">
+          <span class="status-dot green"></span>
+          <span class="status-text">SYSTEM: ONLINE</span>
+        </div>
 
-            <!-- HOVER DROP DOWN UPLOAD BUTTON -->
-            <div class="hover-dropdown-container">
-              <button class="btn btn-primary btn-animated btn-full" id="btn-upload-dropdown">
-                <span class="btn-text-inner">
-                  <span class="btn-label">Upload Files <span class="material-symbols-outlined dropdown-arrow-icon">expand_more</span></span>
-                  <span class="btn-label-clone">Upload Files <span class="material-symbols-outlined dropdown-arrow-icon">expand_more</span></span>
-                </span>
-              </button>
-              
-              <div class="dropdown-menu" id="upload-dropdown-menu">
-                <button class="dropdown-item" id="btn-select-file" type="button">
-                  <span class="material-symbols-outlined">desktop_windows</span>
-                  <span>Select from PC</span>
+        <div class="nav-actions">
+          <button class="btn btn-secondary btn-animated" id="btn-new-project">
+            <span class="btn-text-inner">
+              <span class="btn-label"
+                ><span class="material-symbols-outlined">add</span> New Project</span
+              >
+              <span class="btn-label-clone"
+                ><span class="material-symbols-outlined">add</span> New Project</span
+              >
+            </span>
+          </button>
+          <a href="/index.html" class="btn btn-secondary btn-animated" id="btn-back-home">
+            <span class="btn-text-inner">
+              <span class="btn-label"
+                ><span class="material-symbols-outlined">arrow_back</span> Home</span
+              >
+              <span class="btn-label-clone"
+                ><span class="material-symbols-outlined">arrow_back</span> Home</span
+              >
+            </span>
+          </a>
+        </div>
+      </nav>
+
+      <!-- Main Workspace Layout -->
+      <main class="editor-workspace">
+        <!-- Canva-style horizontal editor container -->
+        <div class="editor-interface-container">
+          <!-- SIDE DOCK (Canva-style Slim Sidebar) -->
+          <div class="editor-side-dock">
+            <button class="dock-btn active" data-tab="uploads" title="Upload Media">
+              <span class="material-symbols-outlined">cloud_upload</span>
+              <span class="dock-label">Uploads</span>
+            </button>
+            <button class="dock-btn" data-tab="filters" title="Retro Filters">
+              <span class="material-symbols-outlined">palette</span>
+              <span class="dock-label">Filters</span>
+            </button>
+            <button class="dock-btn" data-tab="text" title="Text Titles">
+              <span class="material-symbols-outlined">title</span>
+              <span class="dock-label">Text</span>
+            </button>
+            <button class="dock-btn" data-tab="projects" title="Saved Projects">
+              <span class="material-symbols-outlined">folder_open</span>
+              <span class="dock-label">Projects</span>
+            </button>
+          </div>
+
+          <!-- COLLAPSIBLE DRAWER PANEL -->
+          <div class="editor-drawer-panel" id="editor-drawer">
+            <!-- Tab Content 1: Uploads -->
+            <div class="drawer-tab-content active" id="tab-content-uploads">
+              <h2 class="drawer-title">Media Uploads</h2>
+
+              <div class="search-bar-wrapper">
+                <span class="material-symbols-outlined search-icon">search</span>
+                <input
+                  type="text"
+                  placeholder="Search your media..."
+                  class="search-input"
+                  id="media-search-input"
+                />
+              </div>
+
+              <!-- HOVER DROP DOWN UPLOAD BUTTON -->
+              <div class="hover-dropdown-container">
+                <button class="btn btn-primary btn-animated btn-full" id="btn-upload-dropdown">
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      >Upload Files
+                      <span class="material-symbols-outlined dropdown-arrow-icon"
+                        >expand_more</span
+                      ></span
+                    >
+                    <span class="btn-label-clone"
+                      >Upload Files
+                      <span class="material-symbols-outlined dropdown-arrow-icon"
+                        >expand_more</span
+                      ></span
+                    >
+                  </span>
                 </button>
-                <div class="dropdown-dropzone" id="video-drop-zone">
-                  <span class="material-symbols-outlined" style="font-size: 28px; color: var(--color-cyan-medium);">cloud_upload</span>
-                  <p class="dropzone-label">Drag &amp; Drop Here</p>
+
+                <div class="dropdown-menu" id="upload-dropdown-menu">
+                  <button class="dropdown-item" id="btn-select-file" type="button">
+                    <span class="material-symbols-outlined">desktop_windows</span>
+                    <span>Select from PC</span>
+                  </button>
+                  <div class="dropdown-dropzone" id="video-drop-zone">
+                    <span
+                      class="material-symbols-outlined"
+                      style="font-size: 28px; color: var(--color-cyan-medium)"
+                      >cloud_upload</span
+                    >
+                    <p class="dropzone-label">Drag &amp; Drop Here</p>
+                  </div>
+                </div>
+              </div>
+              <input type="file" id="video-file-input" accept="video/*" style="display: none" />
+
+              <!-- Uploaded Video Clip Info -->
+              <div
+                class="loaded-video-info hidden"
+                id="loaded-video-container"
+                style="margin-top: 16px"
+              >
+                <div class="video-item-pill">
+                  <span class="material-symbols-outlined">movie</span>
+                  <span class="video-name" id="loaded-video-name">filename.mp4</span>
+                  <button class="btn-delete-item" id="btn-remove-video" title="Remove video">
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+                <div class="video-meta-grid">
+                  <div>Duration: <span id="meta-duration">00:00</span></div>
+                  <div>Size: <span id="meta-size">0 MB</span></div>
                 </div>
               </div>
             </div>
-            <input type="file" id="video-file-input" accept="video/*" style="display: none;" />
 
-            <!-- Uploaded Video Clip Info -->
-            <div class="loaded-video-info hidden" id="loaded-video-container" style="margin-top: 16px;">
-              <div class="video-item-pill">
-                <span class="material-symbols-outlined">movie</span>
-                <span class="video-name" id="loaded-video-name">filename.mp4</span>
-                <button class="btn-delete-item" id="btn-remove-video" title="Remove video">
-                  <span class="material-symbols-outlined">close</span>
+            <!-- Tab Content 2: Filters -->
+            <div class="drawer-tab-content" id="tab-content-filters">
+              <h2 class="drawer-title">Retro Filters</h2>
+              <p class="sidebar-desc" style="margin-bottom: 12px">
+                Apply retro gradients and scanner line configurations.
+              </p>
+              <div class="filters-grid">
+                <button class="filter-card-btn active" data-filter="none">
+                  <span class="filter-preview none"></span>
+                  <span class="filter-name">None</span>
+                </button>
+                <button class="filter-card-btn" data-filter="scanlines">
+                  <span class="filter-preview scanlines"></span>
+                  <span class="filter-name">CRT Scanlines</span>
+                </button>
+                <button class="filter-card-btn" data-filter="vhs-cyber">
+                  <span class="filter-preview vhs-cyber"></span>
+                  <span class="filter-name">VHS Cyber</span>
+                </button>
+                <button class="filter-card-btn" data-filter="neon-glitch">
+                  <span class="filter-preview neon-glitch"></span>
+                  <span class="filter-name">Neon Glitch</span>
+                </button>
+                <button class="filter-card-btn" data-filter="grayscale">
+                  <span class="filter-preview grayscale"></span>
+                  <span class="filter-name">Retro Mono</span>
                 </button>
               </div>
-              <div class="video-meta-grid">
-                <div>Duration: <span id="meta-duration">00:00</span></div>
-                <div>Size: <span id="meta-size">0 MB</span></div>
+            </div>
+
+            <!-- Tab Content 3: Text Overlays -->
+            <div class="drawer-tab-content" id="tab-content-text">
+              <h2 class="drawer-title">Title Overlays</h2>
+              <p class="sidebar-desc" style="margin-bottom: 12px">
+                Add title texts over video timeline.
+              </p>
+              <button
+                class="btn btn-secondary btn-sm btn-full btn-animated"
+                id="btn-add-text"
+                style="margin-bottom: 16px"
+              >
+                <span class="btn-text-inner">
+                  <span class="btn-label"
+                    ><span class="material-symbols-outlined">add</span> Add Title Text</span
+                  >
+                  <span class="btn-label-clone"
+                    ><span class="material-symbols-outlined">add</span> Add Title Text</span
+                  >
+                </span>
+              </button>
+              <div class="text-overlays-list" id="active-text-overlays">
+                <p class="no-items-text">No text overlays added yet.</p>
+              </div>
+            </div>
+
+            <!-- Tab Content 4: Projects DB -->
+            <div class="drawer-tab-content" id="tab-content-projects">
+              <h2 class="drawer-title">Projects DB</h2>
+              <p class="sidebar-desc" style="margin-bottom: 12px">Saved locally in IndexedDB.</p>
+              <div class="projects-list-container" id="projects-db-list">
+                <div class="no-projects-placeholder">
+                  <span class="material-symbols-outlined">info</span>
+                  <span>No saved projects yet.</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Tab Content 2: Filters -->
-          <div class="drawer-tab-content" id="tab-content-filters">
-            <h2 class="drawer-title">Retro Filters</h2>
-            <p class="sidebar-desc" style="margin-bottom: 12px;">Apply retro gradients and scanner line configurations.</p>
-            <div class="filters-grid">
-              <button class="filter-card-btn active" data-filter="none">
-                <span class="filter-preview none"></span>
-                <span class="filter-name">None</span>
-              </button>
-              <button class="filter-card-btn" data-filter="scanlines">
-                <span class="filter-preview scanlines"></span>
-                <span class="filter-name">CRT Scanlines</span>
-              </button>
-              <button class="filter-card-btn" data-filter="vhs-cyber">
-                <span class="filter-preview vhs-cyber"></span>
-                <span class="filter-name">VHS Cyber</span>
-              </button>
-              <button class="filter-card-btn" data-filter="neon-glitch">
-                <span class="filter-preview neon-glitch"></span>
-                <span class="filter-name">Neon Glitch</span>
-              </button>
-              <button class="filter-card-btn" data-filter="grayscale">
-                <span class="filter-preview grayscale"></span>
-                <span class="filter-name">Retro Mono</span>
-              </button>
-            </div>
-          </div>
+          <!-- CENTER VIEWPORT: Canvas Viewfinder -->
+          <section class="editor-center-workspace">
+            <!-- Viewfinder Frame -->
+            <div class="camcorder-viewport active-editor-viewport" id="camcorder-frame">
+              <!-- Viewfinder corner brackets -->
+              <div class="camcorder-corner corner-tl"></div>
+              <div class="camcorder-corner corner-tr"></div>
+              <div class="camcorder-corner corner-bl"></div>
+              <div class="camcorder-corner corner-br"></div>
 
-          <!-- Tab Content 3: Text Overlays -->
-          <div class="drawer-tab-content" id="tab-content-text">
-            <h2 class="drawer-title">Title Overlays</h2>
-            <p class="sidebar-desc" style="margin-bottom: 12px;">Add title texts over video timeline.</p>
-            <button class="btn btn-secondary btn-sm btn-full btn-animated" id="btn-add-text" style="margin-bottom: 16px;">
-              <span class="btn-text-inner">
-                <span class="btn-label"><span class="material-symbols-outlined">add</span> Add Title Text</span>
-                <span class="btn-label-clone"><span class="material-symbols-outlined">add</span> Add Title Text</span>
-              </span>
-            </button>
-            <div class="text-overlays-list" id="active-text-overlays">
-              <p class="no-items-text">No text overlays added yet.</p>
-            </div>
-          </div>
+              <!-- Viewfinder OSD Header -->
+              <div class="camcorder-header">
+                <div class="rec-container" id="editor-rec-toggle">
+                  <span class="rec-dot blink"></span>
+                  <span class="rec-label">REC</span>
+                </div>
+                <div class="battery-container">
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 18px; vertical-align: middle"
+                    >battery_charging_80</span
+                  >
+                  80%
+                </div>
+              </div>
 
-          <!-- Tab Content 4: Projects DB -->
-          <div class="drawer-tab-content" id="tab-content-projects">
-            <h2 class="drawer-title">Projects DB</h2>
-            <p class="sidebar-desc" style="margin-bottom: 12px;">Saved locally in IndexedDB.</p>
-            <div class="projects-list-container" id="projects-db-list">
-              <div class="no-projects-placeholder">
-                <span class="material-symbols-outlined">info</span>
-                <span>No saved projects yet.</span>
+              <!-- Viewfinder Screen -->
+              <div class="camcorder-screen" id="viewport-screen">
+                <div class="screen-overlay-tape">
+                  <span class="tape-reel" id="tape-reel-indicator"></span>
+                  <span id="overlay-tape-text">TAPE PLAY</span>
+                </div>
+
+                <!-- Canvas Renderer -->
+                <canvas id="editor-canvas" class="editor-render-canvas"></canvas>
+                <video
+                  id="hidden-video-element"
+                  style="display: none"
+                  crossorigin="anonymous"
+                ></video>
+                <div class="crt-overlay-vessel" id="crt-overlay" aria-hidden="true"></div>
+                <div class="screen-overlay-timecode" id="live-timecode">00:00:00:00</div>
+
+                <!-- Video Loading Spinner -->
+                <div class="canvas-loader hidden" id="canvas-loading-spinner">
+                  <div class="spinner-dot"></div>
+                  <span>SYNCING TAPE...</span>
+                </div>
               </div>
             </div>
-          </div>
 
+            <!-- Video Playback HUD Controls (Similar to Canva underneath canvas look) -->
+            <div class="playback-controls-hud">
+              <div class="hud-left">
+                <button
+                  class="hud-btn"
+                  id="hud-btn-rewind"
+                  title="Rewind 5s"
+                  aria-label="Rewind 5 seconds"
+                >
+                  <span class="material-symbols-outlined">fast_rewind</span>
+                </button>
+              </div>
+
+              <div class="hud-center">
+                <span class="hud-timecode" id="hud-current-time">00:00.00</span>
+                <button
+                  class="hud-btn play-pause-btn"
+                  id="hud-btn-play-pause"
+                  title="Play / Pause"
+                  aria-label="Play or pause video"
+                >
+                  <span class="material-symbols-outlined" id="play-pause-icon">play_arrow</span>
+                </button>
+                <span class="hud-timecode" id="hud-total-duration">00:00.00</span>
+              </div>
+
+              <div class="hud-right">
+                <button
+                  class="hud-btn"
+                  id="hud-btn-forward"
+                  title="Forward 5s"
+                  aria-label="Forward 5 seconds"
+                >
+                  <span class="material-symbols-outlined">fast_forward</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- SIDEBAR RIGHT: Inspector & Exports -->
+          <aside class="editor-sidebar-right">
+            <!-- Section 1: Video Properties -->
+            <div class="workspace-card">
+              <h2 class="sidebar-title">
+                <span class="material-symbols-outlined">tune</span> Properties
+              </h2>
+
+              <div class="property-group">
+                <label class="property-label">Aspect Ratio</label>
+                <div class="btn-grid-3">
+                  <button class="btn-toggle active" data-ratio="16/9" id="ratio-16-9">
+                    16:9 Wide
+                  </button>
+                  <button class="btn-toggle" data-ratio="9/16" id="ratio-9-16">9:16 Short</button>
+                  <button class="btn-toggle" data-ratio="1/1" id="ratio-1-1">1:1 Square</button>
+                </div>
+              </div>
+
+              <div class="property-group">
+                <label class="property-label">Playback Speed</label>
+                <div class="btn-grid-4">
+                  <button class="btn-toggle" data-speed="0.5">0.5x</button>
+                  <button class="btn-toggle active" data-speed="1.0">1.0x</button>
+                  <button class="btn-toggle" data-speed="1.5">1.5x</button>
+                  <button class="btn-toggle" data-speed="2.0">2.0x</button>
+                </div>
+              </div>
+
+              <div class="property-group">
+                <label class="property-label" for="hud-volume-slider">System Volume</label>
+                <div class="volume-inspector-row">
+                  <button
+                    class="hud-btn"
+                    id="hud-btn-mute"
+                    title="Toggle Mute"
+                    aria-label="Toggle mute audio"
+                  >
+                    <span class="material-symbols-outlined" id="mute-icon">volume_up</span>
+                  </button>
+                  <input
+                    type="range"
+                    id="hud-volume-slider"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value="0.8"
+                    class="hud-slider"
+                    aria-label="Volume level"
+                    style="flex-grow: 1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Project Exports -->
+            <div class="workspace-card project-exports-card">
+              <h2 class="sidebar-title">
+                <span class="material-symbols-outlined">cloud_upload</span> Export Studio
+              </h2>
+
+              <div class="export-actions-grid">
+                <button
+                  class="btn btn-primary btn-animated btn-full"
+                  id="btn-render-video"
+                  disabled
+                >
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      ><span class="material-symbols-outlined">movie_creation</span> Render
+                      Video</span
+                    >
+                    <span class="btn-label-clone"
+                      ><span class="material-symbols-outlined">movie_creation</span> Render
+                      Video</span
+                    >
+                  </span>
+                </button>
+
+                <button
+                  class="btn btn-secondary btn-animated"
+                  id="btn-export-project"
+                  title="Export Project Configuration JSON"
+                  disabled
+                >
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      ><span class="material-symbols-outlined">download</span> Export JSON</span
+                    >
+                    <span class="btn-label-clone"
+                      ><span class="material-symbols-outlined">download</span> Export JSON</span
+                    >
+                  </span>
+                </button>
+
+                <button
+                  class="btn btn-secondary btn-animated"
+                  id="btn-trigger-import"
+                  title="Import Project Configuration JSON"
+                >
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      ><span class="material-symbols-outlined">upload</span> Import JSON</span
+                    >
+                    <span class="btn-label-clone"
+                      ><span class="material-symbols-outlined">upload</span> Import JSON</span
+                    >
+                  </span>
+                </button>
+                <input type="file" id="project-import-input" accept=".json" style="display: none" />
+              </div>
+            </div>
+          </aside>
         </div>
 
-        <!-- CENTER VIEWPORT: Canvas Viewfinder -->
-        <section class="editor-center-workspace">
-          
-          <!-- Viewfinder Frame -->
-          <div class="camcorder-viewport active-editor-viewport" id="camcorder-frame">
-            <!-- Viewfinder corner brackets -->
-            <div class="camcorder-corner corner-tl"></div>
-            <div class="camcorder-corner corner-tr"></div>
-            <div class="camcorder-corner corner-bl"></div>
-            <div class="camcorder-corner corner-br"></div>
-
-            <!-- Viewfinder OSD Header -->
-            <div class="camcorder-header">
-              <div class="rec-container" id="editor-rec-toggle">
-                <span class="rec-dot blink"></span>
-                <span class="rec-label">REC</span>
-              </div>
-              <div class="battery-container">
-                <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">battery_charging_80</span>
-                80%
-              </div>
+        <!-- BOTTOM TIMELINE PANEL: Zoom, Split, Multi-Track timeline -->
+        <section class="editor-timeline-section">
+          <div class="timeline-toolbar">
+            <div class="toolbar-left">
+              <button
+                class="btn-timeline-tool"
+                id="btn-timeline-split"
+                disabled
+                title="Split clip at playhead"
+              >
+                <span class="material-symbols-outlined">content_cut</span> Split Clip
+              </button>
+              <button
+                class="btn-timeline-tool"
+                id="btn-timeline-delete-clip"
+                disabled
+                title="Delete selected clip segment"
+              >
+                <span class="material-symbols-outlined">delete</span> Delete Segment
+              </button>
+              <button class="btn-timeline-tool" id="btn-timeline-clear" title="Clear all edits">
+                <span class="material-symbols-outlined">restart_alt</span> Reset Project
+              </button>
             </div>
 
-            <!-- Viewfinder Screen -->
-            <div class="camcorder-screen" id="viewport-screen">
-              <div class="screen-overlay-tape">
-                <span class="tape-reel" id="tape-reel-indicator"></span>
-                <span id="overlay-tape-text">TAPE PLAY</span>
-              </div>
-              
-              <!-- Canvas Renderer -->
-              <canvas id="editor-canvas" class="editor-render-canvas"></canvas>
-              <video id="hidden-video-element" style="display: none;" crossorigin="anonymous"></video>
-              <div class="crt-overlay-vessel" id="crt-overlay" aria-hidden="true"></div>
-              <div class="screen-overlay-timecode" id="live-timecode">00:00:00:00</div>
-              
-              <!-- Video Loading Spinner -->
-              <div class="canvas-loader hidden" id="canvas-loading-spinner">
-                <div class="spinner-dot"></div>
-                <span>SYNCING TAPE...</span>
-              </div>
+            <div class="toolbar-right">
+              <span class="timeline-zoom-label"
+                ><span class="material-symbols-outlined">zoom_in</span> Zoom</span
+              >
+              <input
+                type="range"
+                id="timeline-zoom-slider"
+                min="1"
+                max="5"
+                value="2"
+                step="0.5"
+                class="hud-slider"
+                aria-label="Timeline zoom level"
+                style="width: 100px"
+              />
             </div>
           </div>
 
-          <!-- Video Playback HUD Controls (Similar to Canva underneath canvas look) -->
-          <div class="playback-controls-hud">
-            <div class="hud-left">
-              <button class="hud-btn" id="hud-btn-rewind" title="Rewind 5s" aria-label="Rewind 5 seconds">
-                <span class="material-symbols-outlined">fast_rewind</span>
-              </button>
-            </div>
-            
-            <div class="hud-center">
-              <span class="hud-timecode" id="hud-current-time">00:00.00</span>
-              <button class="hud-btn play-pause-btn" id="hud-btn-play-pause" title="Play / Pause" aria-label="Play or pause video">
-                <span class="material-symbols-outlined" id="play-pause-icon">play_arrow</span>
-              </button>
-              <span class="hud-timecode" id="hud-total-duration">00:00.00</span>
+          <!-- The Timeline Workspace wrapper -->
+          <div class="timeline-workspace-wrapper">
+            <!-- Track Labels column (static left) -->
+            <div class="timeline-track-labels">
+              <div class="track-label-header">Tracks</div>
+              <div class="track-label">
+                <span class="material-symbols-outlined">movie</span> Video Clip
+              </div>
+              <div class="track-label">
+                <span class="material-symbols-outlined">title</span> Title Text
+              </div>
             </div>
 
-            <div class="hud-right">
-              <button class="hud-btn" id="hud-btn-forward" title="Forward 5s" aria-label="Forward 5 seconds">
-                <span class="material-symbols-outlined">fast_forward</span>
-              </button>
+            <!-- Interactive Track Lanes and Playhead scrubber -->
+            <div class="timeline-scroll-container" id="timeline-scroll-box">
+              <div class="timeline-tracks-vessel" id="timeline-vessel">
+                <!-- Ruler header (timestamps ticks) -->
+                <div class="timeline-ruler" id="timeline-ruler-ticks">
+                  <!-- Dynamically drawn ticks -->
+                </div>
+
+                <!-- Video clips track lane -->
+                <div class="timeline-track-lane" id="video-track-lane">
+                  <!-- Dynamically rendered clip blocks -->
+                  <div class="video-timeline-placeholder" id="timeline-video-placeholder">
+                    Select a video file to populate the timeline.
+                  </div>
+                </div>
+
+                <!-- Text overlays track lane -->
+                <div class="timeline-track-lane" id="text-track-lane">
+                  <!-- Dynamically rendered text overlay bars -->
+                  <div class="text-timeline-placeholder" id="timeline-text-placeholder">
+                    No active text overlays.
+                  </div>
+                </div>
+
+                <!-- Playhead scrubber line -->
+                <div class="timeline-playhead-scrubber" id="timeline-playhead">
+                  <div class="playhead-handle" id="playhead-drag-handle">
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                  </div>
+                  <div class="playhead-line"></div>
+                </div>
+              </div>
             </div>
           </div>
-
         </section>
+      </main>
+    </div>
 
-        <!-- SIDEBAR RIGHT: Inspector & Exports -->
-        <aside class="editor-sidebar-right">
-
-          <!-- Section 1: Video Properties -->
-          <div class="workspace-card">
-            <h2 class="sidebar-title">
-              <span class="material-symbols-outlined">tune</span> Properties
-            </h2>
-            
-            <div class="property-group">
-              <label class="property-label">Aspect Ratio</label>
-              <div class="btn-grid-3">
-                <button class="btn-toggle active" data-ratio="16/9" id="ratio-16-9">16:9 Wide</button>
-                <button class="btn-toggle" data-ratio="9/16" id="ratio-9-16">9:16 Short</button>
-                <button class="btn-toggle" data-ratio="1/1" id="ratio-1-1">1:1 Square</button>
-              </div>
-            </div>
-
-            <div class="property-group">
-              <label class="property-label">Playback Speed</label>
-              <div class="btn-grid-4">
-                <button class="btn-toggle" data-speed="0.5">0.5x</button>
-                <button class="btn-toggle active" data-speed="1.0">1.0x</button>
-                <button class="btn-toggle" data-speed="1.5">1.5x</button>
-                <button class="btn-toggle" data-speed="2.0">2.0x</button>
-              </div>
-            </div>
-
-            <div class="property-group">
-              <label class="property-label" for="hud-volume-slider">System Volume</label>
-              <div class="volume-inspector-row">
-                <button class="hud-btn" id="hud-btn-mute" title="Toggle Mute" aria-label="Toggle mute audio">
-                  <span class="material-symbols-outlined" id="mute-icon">volume_up</span>
-                </button>
-                <input type="range" id="hud-volume-slider" min="0" max="1" step="0.05" value="0.8" class="hud-slider" aria-label="Volume level" style="flex-grow:1;" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Section 2: Project Exports -->
-          <div class="workspace-card project-exports-card">
-            <h2 class="sidebar-title">
-              <span class="material-symbols-outlined">cloud_upload</span> Export Studio
-            </h2>
-            
-            <div class="export-actions-grid">
-              <button class="btn btn-primary btn-animated btn-full" id="btn-render-video" disabled>
-                <span class="btn-text-inner">
-                  <span class="btn-label"><span class="material-symbols-outlined">movie_creation</span> Render Video</span>
-                  <span class="btn-label-clone"><span class="material-symbols-outlined">movie_creation</span> Render Video</span>
-                </span>
-              </button>
-              
-              <button class="btn btn-secondary btn-animated" id="btn-export-project" title="Export Project Configuration JSON" disabled>
-                <span class="btn-text-inner">
-                  <span class="btn-label"><span class="material-symbols-outlined">download</span> Export JSON</span>
-                  <span class="btn-label-clone"><span class="material-symbols-outlined">download</span> Export JSON</span>
-                </span>
-              </button>
-
-              <button class="btn btn-secondary btn-animated" id="btn-trigger-import" title="Import Project Configuration JSON">
-                <span class="btn-text-inner">
-                  <span class="btn-label"><span class="material-symbols-outlined">upload</span> Import JSON</span>
-                  <span class="btn-label-clone"><span class="material-symbols-outlined">upload</span> Import JSON</span>
-                </span>
-              </button>
-              <input type="file" id="project-import-input" accept=".json" style="display: none;" />
-            </div>
-          </div>
-        </aside>
-
-      </div>
-
-      <!-- BOTTOM TIMELINE PANEL: Zoom, Split, Multi-Track timeline -->
-      <section class="editor-timeline-section">
-        
-        <div class="timeline-toolbar">
-          <div class="toolbar-left">
-            <button class="btn-timeline-tool" id="btn-timeline-split" disabled title="Split clip at playhead">
-              <span class="material-symbols-outlined">content_cut</span> Split Clip
-            </button>
-            <button class="btn-timeline-tool" id="btn-timeline-delete-clip" disabled title="Delete selected clip segment">
-              <span class="material-symbols-outlined">delete</span> Delete Segment
-            </button>
-            <button class="btn-timeline-tool" id="btn-timeline-clear" title="Clear all edits">
-              <span class="material-symbols-outlined">restart_alt</span> Reset Project
-            </button>
-          </div>
-          
-          <div class="toolbar-right">
-            <span class="timeline-zoom-label"><span class="material-symbols-outlined">zoom_in</span> Zoom</span>
-            <input type="range" id="timeline-zoom-slider" min="1" max="5" value="2" step="0.5" class="hud-slider" aria-label="Timeline zoom level" style="width: 100px;" />
-          </div>
+    <!-- Success/Exporting Render Overlay Dialog -->
+    <div class="success-overlay" id="editor-export-overlay" aria-hidden="true">
+      <div class="success-card render-card">
+        <div class="success-cam-visual">
+          <span class="rec-dot blink"></span>
+          <span class="success-status" id="render-status-title">RENDERING TAPE</span>
         </div>
-
-        <!-- The Timeline Workspace wrapper -->
-        <div class="timeline-workspace-wrapper">
-          
-          <!-- Track Labels column (static left) -->
-          <div class="timeline-track-labels">
-            <div class="track-label-header">Tracks</div>
-            <div class="track-label">
-              <span class="material-symbols-outlined">movie</span> Video Clip
-            </div>
-            <div class="track-label">
-              <span class="material-symbols-outlined">title</span> Title Text
-            </div>
-          </div>
-
-          <!-- Interactive Track Lanes and Playhead scrubber -->
-          <div class="timeline-scroll-container" id="timeline-scroll-box">
-            
-            <div class="timeline-tracks-vessel" id="timeline-vessel">
-              
-              <!-- Ruler header (timestamps ticks) -->
-              <div class="timeline-ruler" id="timeline-ruler-ticks">
-                <!-- Dynamically drawn ticks -->
-              </div>
-              
-              <!-- Video clips track lane -->
-              <div class="timeline-track-lane" id="video-track-lane">
-                <!-- Dynamically rendered clip blocks -->
-                <div class="video-timeline-placeholder" id="timeline-video-placeholder">
-                  Select a video file to populate the timeline.
-                </div>
-              </div>
-
-              <!-- Text overlays track lane -->
-              <div class="timeline-track-lane" id="text-track-lane">
-                <!-- Dynamically rendered text overlay bars -->
-                <div class="text-timeline-placeholder" id="timeline-text-placeholder">
-                  No active text overlays.
-                </div>
-              </div>
-
-              <!-- Playhead scrubber line -->
-              <div class="timeline-playhead-scrubber" id="timeline-playhead">
-                <div class="playhead-handle" id="playhead-drag-handle">
-                  <span class="material-symbols-outlined">arrow_drop_down</span>
-                </div>
-                <div class="playhead-line"></div>
-              </div>
-
-            </div>
-
-          </div>
-
+        <div class="render-preview-box">
+          <canvas id="render-export-canvas" width="320" height="180"></canvas>
         </div>
+        <div class="success-icon-wrapper" id="render-status-icon">
+          <span class="material-symbols-outlined spinning-icon">sync</span>
+        </div>
+        <h2 class="success-title" id="render-status-message">Exporting Cyber-Sketch Project</h2>
+        <p class="success-message" id="render-status-subtitle">
+          Recording canvas frames and rendering filters... Do not close this tab.
+        </p>
 
-      </section>
+        <div class="success-loading-bar">
+          <div class="loading-bar-fill" id="render-progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="render-progress-percent" id="render-progress-percent">0%</div>
 
-    </main>
-
-  </div>
-
-  <!-- Success/Exporting Render Overlay Dialog -->
-  <div class="success-overlay" id="editor-export-overlay" aria-hidden="true">
-    <div class="success-card render-card">
-      <div class="success-cam-visual">
-        <span class="rec-dot blink"></span>
-        <span class="success-status" id="render-status-title">RENDERING TAPE</span>
-      </div>
-      <div class="render-preview-box">
-        <canvas id="render-export-canvas" width="320" height="180"></canvas>
-      </div>
-      <div class="success-icon-wrapper" id="render-status-icon">
-        <span class="material-symbols-outlined spinning-icon">sync</span>
-      </div>
-      <h2 class="success-title" id="render-status-message">Exporting Cyber-Sketch Project</h2>
-      <p class="success-message" id="render-status-subtitle">Recording canvas frames and rendering filters... Do not close this tab.</p>
-      
-      <div class="success-loading-bar">
-        <div class="loading-bar-fill" id="render-progress-bar" style="width: 0%;"></div>
-      </div>
-      <div class="render-progress-percent" id="render-progress-percent">0%</div>
-
-      <div class="render-dialog-actions hidden" id="render-done-actions" style="margin-top: 20px;">
-        <button class="btn btn-primary btn-animated" id="btn-download-render">
-          <span class="btn-text-inner">
-            <span class="btn-label"><span class="material-symbols-outlined">download</span> Download File</span>
-            <span class="btn-label-clone"><span class="material-symbols-outlined">download</span> Download File</span>
-          </span>
-        </button>
-        <button class="btn btn-secondary btn-animated" id="btn-close-render-overlay">
-          <span class="btn-text-inner">
-            <span class="btn-label">Close</span>
-            <span class="btn-label-clone">Close</span>
-          </span>
-        </button>
+        <div class="render-dialog-actions hidden" id="render-done-actions" style="margin-top: 20px">
+          <button class="btn btn-primary btn-animated" id="btn-download-render">
+            <span class="btn-text-inner">
+              <span class="btn-label"
+                ><span class="material-symbols-outlined">download</span> Download File</span
+              >
+              <span class="btn-label-clone"
+                ><span class="material-symbols-outlined">download</span> Download File</span
+              >
+            </span>
+          </button>
+          <button class="btn btn-secondary btn-animated" id="btn-close-render-overlay">
+            <span class="btn-text-inner">
+              <span class="btn-label">Close</span>
+              <span class="btn-label-clone">Close</span>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Text Overlay Configuration Modal -->
-  <div class="text-modal-backdrop hidden" id="text-settings-modal">
-    <div class="text-modal-card">
-      <div class="modal-header">
-        <h3>Edit Title Properties</h3>
-        <button class="btn-close-modal" id="btn-modal-close" aria-label="Close modal"><span class="material-symbols-outlined">close</span></button>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" id="modal-text-id" />
-        
-        <div class="modal-form-group">
-          <label class="form-label" for="modal-input-text">Title Text</label>
-          <input type="text" id="modal-input-text" class="form-input" placeholder="ENTER TITLE..." />
+    <!-- Text Overlay Configuration Modal -->
+    <div class="text-modal-backdrop hidden" id="text-settings-modal">
+      <div class="text-modal-card">
+        <div class="modal-header">
+          <h3>Edit Title Properties</h3>
+          <button class="btn-close-modal" id="btn-modal-close" aria-label="Close modal">
+            <span class="material-symbols-outlined">close</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <input type="hidden" id="modal-text-id" />
 
-        <div class="modal-form-grid-2">
           <div class="modal-form-group">
-            <label class="form-label" for="modal-input-start">Start Time (sec)</label>
-            <input type="number" id="modal-input-start" class="form-input" min="0" step="0.1" value="0" />
+            <label class="form-label" for="modal-input-text">Title Text</label>
+            <input
+              type="text"
+              id="modal-input-text"
+              class="form-input"
+              placeholder="ENTER TITLE..."
+            />
           </div>
-          <div class="modal-form-group">
-            <label class="form-label" for="modal-input-end">End Time (sec)</label>
-            <input type="number" id="modal-input-end" class="form-input" min="0.1" step="0.1" value="5" />
-          </div>
-        </div>
 
-        <div class="modal-form-grid-2">
-          <div class="modal-form-group">
-            <label class="form-label" for="modal-input-font-size">Font Size (px)</label>
-            <input type="range" id="modal-input-font-size" min="16" max="64" value="28" class="hud-slider" />
-            <span class="slider-value" id="modal-font-size-val">28px</span>
+          <div class="modal-form-grid-2">
+            <div class="modal-form-group">
+              <label class="form-label" for="modal-input-start">Start Time (sec)</label>
+              <input
+                type="number"
+                id="modal-input-start"
+                class="form-input"
+                min="0"
+                step="0.1"
+                value="0"
+              />
+            </div>
+            <div class="modal-form-group">
+              <label class="form-label" for="modal-input-end">End Time (sec)</label>
+              <input
+                type="number"
+                id="modal-input-end"
+                class="form-input"
+                min="0.1"
+                step="0.1"
+                value="5"
+              />
+            </div>
           </div>
-          <div class="modal-form-group">
-            <label class="form-label">Text Color</label>
-            <div class="color-picker-grid">
-              <button class="color-picker-btn active" data-color="#ffffff" style="background-color: #ffffff;"></button>
-              <button class="color-picker-btn" data-color="#2ddbde" style="background-color: #2ddbde;"></button>
-              <button class="color-picker-btn" data-color="#ec648c" style="background-color: #ec648c;"></button>
-              <button class="color-picker-btn" data-color="#ffff00" style="background-color: #ffff00;"></button>
-              <button class="color-picker-btn" data-color="#000000" style="background-color: #000000; border: 2px solid var(--color-black);"></button>
+
+          <div class="modal-form-grid-2">
+            <div class="modal-form-group">
+              <label class="form-label" for="modal-input-font-size">Font Size (px)</label>
+              <input
+                type="range"
+                id="modal-input-font-size"
+                min="16"
+                max="64"
+                value="28"
+                class="hud-slider"
+              />
+              <span class="slider-value" id="modal-font-size-val">28px</span>
+            </div>
+            <div class="modal-form-group">
+              <label class="form-label">Text Color</label>
+              <div class="color-picker-grid">
+                <button
+                  class="color-picker-btn active"
+                  data-color="#ffffff"
+                  style="background-color: #ffffff"
+                ></button>
+                <button
+                  class="color-picker-btn"
+                  data-color="#2ddbde"
+                  style="background-color: #2ddbde"
+                ></button>
+                <button
+                  class="color-picker-btn"
+                  data-color="#ec648c"
+                  style="background-color: #ec648c"
+                ></button>
+                <button
+                  class="color-picker-btn"
+                  data-color="#ffff00"
+                  style="background-color: #ffff00"
+                ></button>
+                <button
+                  class="color-picker-btn"
+                  data-color="#000000"
+                  style="background-color: #000000; border: 2px solid var(--color-black)"
+                ></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-form-grid-2">
+            <div class="modal-form-group">
+              <label class="form-label" for="modal-input-x">Position X (%)</label>
+              <input
+                type="range"
+                id="modal-input-x"
+                min="0"
+                max="100"
+                value="50"
+                class="hud-slider"
+              />
+              <span class="slider-value" id="modal-x-val">50%</span>
+            </div>
+            <div class="modal-form-group">
+              <label class="form-label" for="modal-input-y">Position Y (%)</label>
+              <input
+                type="range"
+                id="modal-input-y"
+                min="0"
+                max="100"
+                value="50"
+                class="hud-slider"
+              />
+              <span class="slider-value" id="modal-y-val">50%</span>
             </div>
           </div>
         </div>
-
-        <div class="modal-form-grid-2">
-          <div class="modal-form-group">
-            <label class="form-label" for="modal-input-x">Position X (%)</label>
-            <input type="range" id="modal-input-x" min="0" max="100" value="50" class="hud-slider" />
-            <span class="slider-value" id="modal-x-val">50%</span>
-          </div>
-          <div class="modal-form-group">
-            <label class="form-label" for="modal-input-y">Position Y (%)</label>
-            <input type="range" id="modal-input-y" min="0" max="100" value="50" class="hud-slider" />
-            <span class="slider-value" id="modal-y-val">50%</span>
-          </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-animated" id="btn-modal-delete">
+            <span class="btn-text-inner">
+              <span class="btn-label"
+                ><span class="material-symbols-outlined">delete</span> Delete</span
+              >
+              <span class="btn-label-clone"
+                ><span class="material-symbols-outlined">delete</span> Delete</span
+              >
+            </span>
+          </button>
+          <button class="btn btn-primary btn-animated" id="btn-modal-save">
+            <span class="btn-text-inner">
+              <span class="btn-label">Save Changes</span>
+              <span class="btn-label-clone">Save Changes</span>
+            </span>
+          </button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary btn-animated" id="btn-modal-delete">
-          <span class="btn-text-inner">
-            <span class="btn-label"><span class="material-symbols-outlined">delete</span> Delete</span>
-            <span class="btn-label-clone"><span class="material-symbols-outlined">delete</span> Delete</span>
-          </span>
-        </button>
-        <button class="btn btn-primary btn-animated" id="btn-modal-save">
-          <span class="btn-text-inner">
-            <span class="btn-label">Save Changes</span>
-            <span class="btn-label-clone">Save Changes</span>
-          </span>
-        </button>
-      </div>
     </div>
-  </div>
 
-  <!-- Entry JavaScript file -->
-  <script type="module" src="/src/editor.js"></script>
-</body>
-
+    <!-- Entry JavaScript file -->
+    <script type="module" src="/src/editor.js"></script>
+  </body>
 </html>

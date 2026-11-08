@@ -47,7 +47,8 @@ import { createId } from '../utils/ids.js';
  * @returns {EditorProject}
  */
 export function createDefaultProject(name) {
-  const defaultName = name && name.trim() !== '' ? name.trim() : 'SARJ-' + new Date().toLocaleTimeString();
+  const defaultName =
+    name && name.trim() !== '' ? name.trim() : 'SARJ-' + new Date().toLocaleTimeString();
   return {
     id: createId('proj'),
     name: defaultName,
@@ -160,4 +161,3 @@ export function setVideoSourceUrl(url) {
   }
   videoSourceUrl = url;
 }
-

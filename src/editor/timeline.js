@@ -114,7 +114,7 @@ export function splitClipAtTime(clips, playheadTime) {
  */
 export function deleteClipSegment(clips, clipId) {
   if (!Array.isArray(clips)) return [];
-  return clips.filter(c => c && c.id !== clipId);
+  return clips.filter((c) => c && c.id !== clipId);
 }
 
 /**
@@ -150,4 +150,3 @@ export function generateRulerTicks(duration, zoomLevel) {
   }
   return ticks;
 }
-

@@ -13,11 +13,17 @@ import { validateTimeRange } from '../utils/validation.js';
  * @param {number} [maxDuration=Infinity] - Total timeline duration limit.
  * @returns {object} Text overlay object.
  */
-export function createTextOverlay(text = 'CYBER TITLE', start = 0, duration = 4, maxDuration = Infinity) {
+export function createTextOverlay(
+  text = 'CYBER TITLE',
+  start = 0,
+  duration = 4,
+  maxDuration = Infinity
+) {
   const safeStart = Math.max(0, start);
-  const safeEnd = isFinite(maxDuration) && maxDuration > 0
-    ? Math.min(safeStart + duration, maxDuration)
-    : safeStart + duration;
+  const safeEnd =
+    isFinite(maxDuration) && maxDuration > 0
+      ? Math.min(safeStart + duration, maxDuration)
+      : safeStart + duration;
 
   return {
     id: createId('txt'),
@@ -39,9 +45,10 @@ export function createTextOverlay(text = 'CYBER TITLE', start = 0, duration = 4,
  * @returns {{ success: boolean, texts: Array<object>, error?: string }}
  */
 export function updateTextOverlay(texts, id, updates) {
-  if (!Array.isArray(texts)) return { success: false, texts: [], error: 'Invalid texts collection.' };
+  if (!Array.isArray(texts))
+    return { success: false, texts: [], error: 'Invalid texts collection.' };
 
-  const target = texts.find(t => t.id === id);
+  const target = texts.find((t) => t.id === id);
   if (!target) return { success: false, texts, error: 'Text overlay not found.' };
 
   const newStart = typeof updates.start === 'number' ? updates.start : target.start;
@@ -52,7 +59,7 @@ export function updateTextOverlay(texts, id, updates) {
     return { success: false, texts, error: validation.error };
   }
 
-  const updatedTexts = texts.map(t => {
+  const updatedTexts = texts.map((t) => {
     if (t.id === id) {
       return {
         ...t,
@@ -80,7 +87,7 @@ export function updateTextOverlay(texts, id, updates) {
  */
 export function removeTextOverlay(texts, id) {
   if (!Array.isArray(texts)) return [];
-  return texts.filter(t => t && t.id !== id);
+  return texts.filter((t) => t && t.id !== id);
 }
 
 /**
@@ -111,4 +118,3 @@ export function handleModalFocusTrap(modalElement, e) {
     }
   }
 }
-

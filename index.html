@@ -1,489 +1,660 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- SEO Optimization -->
+    <title>SARJ-CAM - Retro Video Editor Studio</title>
+    <meta
+      name="description"
+      content="Browser-based retro video editor powered by Canvas API, MediaRecorder, and IndexedDB. Cut and split video clips, apply VHS and CRT filters, add titles, and export WebM."
+    />
 
-  <!-- SEO Optimization -->
-  <title>SARJ-CAM - Retro Video Editor Studio</title>
-  <meta name="description"
-    content="Browser-based retro video editor powered by Canvas API, MediaRecorder, and IndexedDB. Cut and split video clips, apply VHS and CRT filters, add titles, and export WebM." />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Open Graph / Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://editingapp.netlify.app/" />
+    <meta property="og:title" content="SARJ-CAM - Retro Video Editor Studio" />
+    <meta
+      property="og:description"
+      content="Client-side retro video editor with tactile controls. Trim clips, apply CRT and VHS filters, overlay titles, and export WebM."
+    />
+    <meta property="og:image" content="https://editingapp.netlify.app/preview.jpg" />
 
-  <!-- Open Graph / Meta -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://editingapp.netlify.app/" />
-  <meta property="og:title" content="SARJ-CAM - Retro Video Editor Studio" />
-  <meta property="og:description"
-    content="Client-side retro video editor with tactile controls. Trim clips, apply CRT and VHS filters, overlay titles, and export WebM." />
-  <meta property="og:image" content="https://editingapp.netlify.app/preview.jpg" />
+    <!-- Preloads & Font Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <!-- Preloads & Font Preconnects -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Custom Stylesheet (Linked directly, Vite compiles this) -->
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
 
-  <!-- Custom Stylesheet (Linked directly, Vite compiles this) -->
-  <link rel="stylesheet" href="/src/style.css" />
-</head>
+  <body>
+    <!-- Floating Ambient Orbs (Retro-futuristic background elements) -->
+    <div class="ambient-orbs" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
 
-<body>
+    <!-- Outer Monitor Frame (Simulates viewfinder frame) -->
+    <div class="outer-frame">
+      <!-- Navigation Bar -->
+      <nav class="navbar" id="top-navbar">
+        <div class="nav-logo"><span class="logo-accent">SARJ</span> - CAM EDIT</div>
 
-  <!-- Floating Ambient Orbs (Retro-futuristic background elements) -->
-  <div class="ambient-orbs" aria-hidden="true">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-  </div>
-
-  <!-- Outer Monitor Frame (Simulates viewfinder frame) -->
-  <div class="outer-frame">
-
-    <!-- Navigation Bar -->
-    <nav class="navbar" id="top-navbar">
-      <div class="nav-logo">
-        <span class="logo-accent">SARJ</span> - CAM EDIT
-      </div>
-
-      <!-- Navigation Links -->
-      <div class="nav-links" role="navigation">
-        <a class="nav-link" href="/editor.html" style="color: var(--color-accent-pink); font-weight: 700;">Studio Editor</a>
-        <a class="nav-link" href="#features">Features</a>
-        <a class="nav-link" href="#how-it-works">How It Works</a>
-        <a class="nav-link" href="#tactile-section">Controls</a>
-      </div>
-
-      <!-- Actions -->
-      <div class="nav-actions">
-        <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-navbar-editor">
-          <span class="btn-text-inner">
-            <span class="btn-label"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle; margin-right:4px;">movie_creation</span>Open Editor</span>
-            <span class="btn-label-clone"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle; margin-right:4px;">movie_creation</span>Open Editor</span>
-          </span>
-        </a>
-      </div>
-    </nav>
-
-    <!-- Main Content Container -->
-    <main class="main-content">
-
-      <!-- HERO SECTION (Split-Screen Layout) -->
-      <section class="hero-section" id="hero-area">
-
-        <!-- Left Side: Copy and CTAs -->
-        <div class="hero-left">
-          <h1 class="hero-headline" id="hero-headline-split">
-            Tactile retro<br />in-browser<br /><span class="text-highlight">video editor</span>
-          </h1>
-
-          <div class="hero-copy-container reveal-up">
-            <p class="hero-copy">
-              A client-side studio for your video projects. Trim and split footage, apply CRT scanlines and VHS cyber filters, add custom title overlays, and export WebM videos locally with zero cloud dependencies.
-            </p>
-
-            <div class="hero-actions">
-              <a href="/editor.html" class="btn btn-primary btn-animated" id="cta-get-website">
-                <span class="btn-text-inner">
-                  <span class="btn-label"><span class="material-symbols-outlined">movie_creation</span> Start Editing</span>
-                  <span class="btn-label-clone"><span class="material-symbols-outlined">movie_creation</span> Start Editing</span>
-                </span>
-              </a>
-              <a href="#how-it-works" class="btn btn-secondary btn-animated" id="cta-demo">
-                <span class="btn-text-inner">
-                  <span class="btn-label"><span class="material-symbols-outlined">info</span> How It Works</span>
-                  <span class="btn-label-clone"><span class="material-symbols-outlined">info</span> How It Works</span>
-                </span>
-              </a>
-            </div>
-          </div>
+        <!-- Navigation Links -->
+        <div class="nav-links" role="navigation">
+          <a
+            class="nav-link"
+            href="/editor.html"
+            style="color: var(--color-accent-pink); font-weight: 700"
+            >Studio Editor</a
+          >
+          <a class="nav-link" href="#features">Features</a>
+          <a class="nav-link" href="#how-it-works">How It Works</a>
+          <a class="nav-link" href="#tactile-section">Controls</a>
         </div>
 
-        <!-- Right Side: Camcorder Viewport displaying preview video -->
-        <div class="hero-right reveal-right">
-          <div class="camcorder-viewport" id="camcorder-frame">
-            <!-- Viewfinder corner brackets -->
-            <div class="camcorder-corner corner-tl"></div>
-            <div class="camcorder-corner corner-tr"></div>
-            <div class="camcorder-corner corner-bl"></div>
-            <div class="camcorder-corner corner-br"></div>
-
-            <!-- Viewfinder OSD Header -->
-            <div class="camcorder-header">
-              <div class="rec-container">
-                <span class="rec-dot blink"></span>
-                <span class="rec-label">REC</span>
-              </div>
-              <div class="battery-container">
-                <span class="material-symbols-outlined"
-                  style="font-size: 18px; vertical-align: middle;">battery_full</span>
-                100%
-              </div>
-            </div>
-
-            <!-- Viewfinder Screen displaying video preview -->
-            <div class="camcorder-screen">
-              <!-- Tape Indicator overlay -->
-              <div class="screen-overlay-tape">
-                <span class="tape-reel" id="tape-reel-indicator"></span>
-                <span>PLAY A:01</span>
-              </div>
-
-              <!-- Primary Asset: Hardware-accelerated muted looping preview -->
-              <video class="screen-gif" autoplay loop muted playsinline poster="/preview.jpg" id="primary-visual-asset" aria-label="SARJ-CAM retro preview animation">
-                <source src="/preview.webm" type="video/webm">
-                <source src="/preview.mp4" type="video/mp4">
-              </video>
-
-              <!-- live-updated Timecode overlay -->
-              <div class="screen-overlay-timecode" id="live-timecode">00:04:20:00</div>
-            </div>
-          </div>
-
-          <!-- Floating badge -->
-          <div class="hero-float-badge" id="float-badge">
-            <span class="float-badge-dot"></span>
-            <span class="float-badge-text">CLIENT-SIDE ENGINE</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- MARQUEE TICKER STRIP -->
-      <div class="marquee-section" id="marquee-strip" aria-label="Feature highlights">
-        <div class="marquee-track">
-          <div class="marquee-content">
-            <span class="marquee-item"><span class="material-symbols-outlined">content_cut</span> Trim &amp; Split</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">tv</span> CRT Scanlines</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">palette</span> VHS Cyber</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">blur_on</span> Neon Glitch</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">contrast</span> Retro Mono</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">title</span> Title Overlays</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">video_library</span> Interactive Timeline</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">database</span> IndexedDB Persistence</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">download</span> WebM Video Export</span>
-            <span class="marquee-sep">◆</span>
-            <!-- Duplicate for seamless loop -->
-            <span class="marquee-item"><span class="material-symbols-outlined">content_cut</span> Trim &amp; Split</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">tv</span> CRT Scanlines</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">palette</span> VHS Cyber</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">blur_on</span> Neon Glitch</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">contrast</span> Retro Mono</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">title</span> Title Overlays</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">video_library</span> Interactive Timeline</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">database</span> IndexedDB Persistence</span>
-            <span class="marquee-sep">◆</span>
-            <span class="marquee-item"><span class="material-symbols-outlined">download</span> WebM Video Export</span>
-            <span class="marquee-sep">◆</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- FEATURE STRIP -->
-      <section class="feature-strip" id="features">
-
-        <!-- Card 1 -->
-        <div class="feature-card reveal-up" id="feature-cut" style="--reveal-delay: 0ms">
-          <div class="feature-icon-wrapper bg-cyan-soft">
-            <span class="material-symbols-outlined" style="font-size: 32px;">content_cut</span>
-          </div>
-          <h3 class="feature-title">Trim &amp; Split</h3>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="feature-card reveal-up" id="feature-sync" style="--reveal-delay: 120ms">
-          <div class="feature-icon-wrapper bg-pink-soft">
-            <span class="material-symbols-outlined" style="font-size: 32px;">palette</span>
-          </div>
-          <h3 class="feature-title">Retro Filters</h3>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="feature-card reveal-up" id="feature-create" style="--reveal-delay: 240ms">
-          <div class="feature-icon-wrapper bg-blue-soft">
-            <span class="material-symbols-outlined" style="font-size: 32px;">save</span>
-          </div>
-          <h3 class="feature-title">Local Save</h3>
-        </div>
-
-      </section>
-
-      <!-- STATS COUNTER SECTION -->
-      <section class="stats-section reveal-up" id="stats-area">
-        <div class="stats-grid">
-          <div class="stat-item" id="stat-1">
-            <div class="stat-number" data-target="4">0</div>
-            <div class="stat-suffix"></div>
-            <p class="stat-label">Canvas Filters</p>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item" id="stat-2">
-            <div class="stat-number" data-target="100">0</div>
-            <div class="stat-suffix">%</div>
-            <p class="stat-label">Client-Side Engine</p>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item" id="stat-3">
-            <div class="stat-number" data-target="0">0</div>
-            <div class="stat-suffix"></div>
-            <p class="stat-label">Server Uploads (Private)</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- CONTENT BLOCK 1 (Unify your edits - Cyan Card) -->
-      <section class="block-container" id="unify-section">
-        <h2 class="block-title-large reveal-up">Direct In-Browser Architecture</h2>
-
-        <div class="content-block-cyan reveal-up" style="--reveal-delay: 100ms">
-          <div class="cyan-left">
-            <div class="cyan-item">
-              <h3>Browser-Native Canvas &amp; Video</h3>
-              <p>Your video files stay entirely on your device. Video frames are decoded locally, rendered to an HTML5 Canvas, and stylized with CSS and scanline filters.</p>
-            </div>
-            <div class="cyan-item">
-              <h3>IndexedDB Project Persistence</h3>
-              <p>Work without fear of lost edits. Timeline clips, text titles, volume, and playback speed automatically persist in your browser's IndexedDB database.</p>
-            </div>
-          </div>
-
-          <div class="cyan-right">
-            <div class="cyan-right-card" id="cyan-tilt-card">
-              <div class="card-header-bar">
-                <span>Client-Side Pipeline</span>
-                <span class="material-symbols-outlined">memory</span>
-              </div>
-
-              <div class="card-list-flow">
-                <div class="flow-step flow-step-anim" style="--step-delay: 0ms">
-                  <span>01 Import Local Video</span>
-                  <span class="step-indicator step-cyan"></span>
-                </div>
-                <div class="flow-step flow-step-anim" style="--step-delay: 150ms">
-                  <span>02 Trim &amp; Add Titles</span>
-                  <span class="step-indicator step-pink"></span>
-                </div>
-                <div class="flow-step flow-step-anim" style="--step-delay: 300ms">
-                  <span>03 Render to WebM</span>
-                  <span class="step-indicator step-blue"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SCROLL STACK SECTION -->
-      <section class="scroll-stack-wrapper" id="scroll-stack-area" aria-label="How it works">
-        <div class="scroll-stack-header reveal-up" id="how-it-works">
-          <h2 class="block-title-large" style="margin-bottom: 0;">How it works</h2>
-          <p class="scroll-stack-sub">Three simple steps to your finished video</p>
-        </div>
-
-        <div class="scroll-stack-sticky" id="scroll-stack-sticky">
-          <!-- Card 1 -->
-          <div class="stack-card stack-card-1" id="stack-card-1" data-index="0">
-            <div class="stack-card-inner">
-              <div class="stack-card-num">01</div>
-              <div class="stack-card-content">
-                <div class="stack-card-icon">
-                  <span class="material-symbols-outlined" style="font-size: 40px;">folder_open</span>
-                </div>
-                <h3 class="stack-card-title">Load Raw Media</h3>
-                <p class="stack-card-body">Select or drag &amp; drop an MP4 or WebM video file. The file is loaded directly into the browser via Blob Object URLs—no upload waits or external servers.</p>
-              </div>
-              <div class="stack-card-visual stack-visual-1">
-                <div class="stack-visual-inner">
-                  <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3;">movie</span>
-                  <img src="/import.jpg" alt="Video media import interface" class="stack-visual-img" style="max-width:100%; height:auto;" loading="lazy" decoding="async">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="stack-card stack-card-2" id="stack-card-2" data-index="1">
-            <div class="stack-card-inner">
-              <div class="stack-card-num">02</div>
-              <div class="stack-card-content">
-                <div class="stack-card-icon">
-                  <span class="material-symbols-outlined" style="font-size: 40px;">tune</span>
-                </div>
-                <h3 class="stack-card-title">Trim, Filter &amp; Overlay</h3>
-                <p class="stack-card-body">Split clips at the playhead, delete segments, and apply 4 retro filters: CRT Scanlines, VHS Cyber, Neon Glitch, and Retro Mono. Add title text overlays with custom timestamps and neon styling.</p>
-              </div>
-              <div class="stack-card-visual stack-visual-2">
-                <div class="stack-visual-inner">
-                  <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3;">tune</span>
-                  <img src="/editor.jpg" alt="Interactive retro editor interface with timeline" class="stack-visual-img" style="max-width:100%; height:auto;" loading="lazy" decoding="async">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="stack-card stack-card-3" id="stack-card-3" data-index="2">
-            <div class="stack-card-inner">
-              <div class="stack-card-num">03</div>
-              <div class="stack-card-content">
-                <div class="stack-card-icon">
-                  <span class="material-symbols-outlined" style="font-size: 40px;">download</span>
-                </div>
-                <h3 class="stack-card-title">Export WebM &amp; Project JSON</h3>
-                <p class="stack-card-body">Render canvas frames directly in your browser using the MediaRecorder API to produce a downloadable WebM video file, or backup your project configuration as a portable JSON file.</p>
-              </div>
-              <div class="stack-card-visual stack-visual-3">
-                <div class="stack-visual-inner">
-                  <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3;">file_download</span>
-                  <img src="/export.png" alt="Render and export progress modal" class="stack-visual-img" style="max-width:100%; height:auto;" loading="lazy" decoding="async">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Progress dots -->
-        <div class="stack-progress" id="stack-progress" aria-hidden="true">
-          <div class="stack-dot stack-dot-active" data-index="0"></div>
-          <div class="stack-dot" data-index="1"></div>
-          <div class="stack-dot" data-index="2"></div>
-        </div>
-      </section>
-
-      <!-- CONTENT BLOCK 2 (Tactile Controls) -->
-      <section class="content-block-tactile" id="tactile-section">
-
-        <!-- Left Column: Locally hosted tactile asset -->
-        <div class="tactile-left reveal-left">
-          <div class="tactile-card" id="tactile-tilt-card">
-            <img
-              src="/tactile.jpg"
-              alt="Tactile video editing keyboard interface screenshot"
-              loading="lazy"
-              decoding="async" />
-          </div>
-        </div>
-
-        <!-- Right Column: Detail copy -->
-        <div class="tactile-right reveal-right" style="--reveal-delay: 100ms">
-          <div class="tactile-tag">Tactile Controls</div>
-          <h2 class="tactile-title">
-            Keyboard Shortcuts &amp; Multi-Track Timeline
-          </h2>
-          <h3 class="tactile-subtitle">Built for Speed and Accuracy</h3>
-          <p style="margin-bottom: 20px; color: var(--color-dark-grey); line-height: 1.6;">
-            Navigate playback with Space to play/pause, Left and Right arrows to scrub ±1 second, and the zoom slider (1x to 5x) for millisecond clip alignment.
-          </p>
-          <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-tactile-more">
+        <!-- Actions -->
+        <div class="nav-actions">
+          <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-navbar-editor">
             <span class="btn-text-inner">
-              <span class="btn-label">Open Editor</span>
-              <span class="btn-label-clone">Open Editor</span>
+              <span class="btn-label"
+                ><span
+                  class="material-symbols-outlined"
+                  style="font-size: 16px; vertical-align: middle; margin-right: 4px"
+                  >movie_creation</span
+                >Open Editor</span
+              >
+              <span class="btn-label-clone"
+                ><span
+                  class="material-symbols-outlined"
+                  style="font-size: 16px; vertical-align: middle; margin-right: 4px"
+                  >movie_creation</span
+                >Open Editor</span
+              >
             </span>
           </a>
         </div>
+      </nav>
 
+      <!-- Main Content Container -->
+      <main class="main-content">
+        <!-- HERO SECTION (Split-Screen Layout) -->
+        <section class="hero-section" id="hero-area">
+          <!-- Left Side: Copy and CTAs -->
+          <div class="hero-left">
+            <h1 class="hero-headline" id="hero-headline-split">
+              Tactile retro<br />in-browser<br /><span class="text-highlight">video editor</span>
+            </h1>
+
+            <div class="hero-copy-container reveal-up">
+              <p class="hero-copy">
+                A client-side studio for your video projects. Trim and split footage, apply CRT
+                scanlines and VHS cyber filters, add custom title overlays, and export WebM videos
+                locally with zero cloud dependencies.
+              </p>
+
+              <div class="hero-actions">
+                <a href="/editor.html" class="btn btn-primary btn-animated" id="cta-get-website">
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      ><span class="material-symbols-outlined">movie_creation</span> Start
+                      Editing</span
+                    >
+                    <span class="btn-label-clone"
+                      ><span class="material-symbols-outlined">movie_creation</span> Start
+                      Editing</span
+                    >
+                  </span>
+                </a>
+                <a href="#how-it-works" class="btn btn-secondary btn-animated" id="cta-demo">
+                  <span class="btn-text-inner">
+                    <span class="btn-label"
+                      ><span class="material-symbols-outlined">info</span> How It Works</span
+                    >
+                    <span class="btn-label-clone"
+                      ><span class="material-symbols-outlined">info</span> How It Works</span
+                    >
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: Camcorder Viewport displaying preview video -->
+          <div class="hero-right reveal-right">
+            <div class="camcorder-viewport" id="camcorder-frame">
+              <!-- Viewfinder corner brackets -->
+              <div class="camcorder-corner corner-tl"></div>
+              <div class="camcorder-corner corner-tr"></div>
+              <div class="camcorder-corner corner-bl"></div>
+              <div class="camcorder-corner corner-br"></div>
+
+              <!-- Viewfinder OSD Header -->
+              <div class="camcorder-header">
+                <div class="rec-container">
+                  <span class="rec-dot blink"></span>
+                  <span class="rec-label">REC</span>
+                </div>
+                <div class="battery-container">
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 18px; vertical-align: middle"
+                    >battery_full</span
+                  >
+                  100%
+                </div>
+              </div>
+
+              <!-- Viewfinder Screen displaying video preview -->
+              <div class="camcorder-screen">
+                <!-- Tape Indicator overlay -->
+                <div class="screen-overlay-tape">
+                  <span class="tape-reel" id="tape-reel-indicator"></span>
+                  <span>PLAY A:01</span>
+                </div>
+
+                <!-- Primary Asset: Hardware-accelerated muted looping preview -->
+                <video
+                  class="screen-gif"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  poster="/preview.jpg"
+                  id="primary-visual-asset"
+                  aria-label="SARJ-CAM retro preview animation"
+                >
+                  <source src="/preview.webm" type="video/webm" />
+                  <source src="/preview.mp4" type="video/mp4" />
+                </video>
+
+                <!-- live-updated Timecode overlay -->
+                <div class="screen-overlay-timecode" id="live-timecode">00:04:20:00</div>
+              </div>
+            </div>
+
+            <!-- Floating badge -->
+            <div class="hero-float-badge" id="float-badge">
+              <span class="float-badge-dot"></span>
+              <span class="float-badge-text">CLIENT-SIDE ENGINE</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- MARQUEE TICKER STRIP -->
+        <div class="marquee-section" id="marquee-strip" aria-label="Feature highlights">
+          <div class="marquee-track">
+            <div class="marquee-content">
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">content_cut</span> Trim &amp; Split</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">tv</span> CRT Scanlines</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">palette</span> VHS Cyber</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">blur_on</span> Neon Glitch</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">contrast</span> Retro Mono</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">title</span> Title Overlays</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">video_library</span> Interactive
+                Timeline</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">database</span> IndexedDB Persistence</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">download</span> WebM Video Export</span
+              >
+              <span class="marquee-sep">◆</span>
+              <!-- Duplicate for seamless loop -->
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">content_cut</span> Trim &amp; Split</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">tv</span> CRT Scanlines</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">palette</span> VHS Cyber</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">blur_on</span> Neon Glitch</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">contrast</span> Retro Mono</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">title</span> Title Overlays</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">video_library</span> Interactive
+                Timeline</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">database</span> IndexedDB Persistence</span
+              >
+              <span class="marquee-sep">◆</span>
+              <span class="marquee-item"
+                ><span class="material-symbols-outlined">download</span> WebM Video Export</span
+              >
+              <span class="marquee-sep">◆</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEATURE STRIP -->
+        <section class="feature-strip" id="features">
+          <!-- Card 1 -->
+          <div class="feature-card reveal-up" id="feature-cut" style="--reveal-delay: 0ms">
+            <div class="feature-icon-wrapper bg-cyan-soft">
+              <span class="material-symbols-outlined" style="font-size: 32px">content_cut</span>
+            </div>
+            <h3 class="feature-title">Trim &amp; Split</h3>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="feature-card reveal-up" id="feature-sync" style="--reveal-delay: 120ms">
+            <div class="feature-icon-wrapper bg-pink-soft">
+              <span class="material-symbols-outlined" style="font-size: 32px">palette</span>
+            </div>
+            <h3 class="feature-title">Retro Filters</h3>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="feature-card reveal-up" id="feature-create" style="--reveal-delay: 240ms">
+            <div class="feature-icon-wrapper bg-blue-soft">
+              <span class="material-symbols-outlined" style="font-size: 32px">save</span>
+            </div>
+            <h3 class="feature-title">Local Save</h3>
+          </div>
+        </section>
+
+        <!-- STATS COUNTER SECTION -->
+        <section class="stats-section reveal-up" id="stats-area">
+          <div class="stats-grid">
+            <div class="stat-item" id="stat-1">
+              <div class="stat-number" data-target="4">0</div>
+              <div class="stat-suffix"></div>
+              <p class="stat-label">Canvas Filters</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item" id="stat-2">
+              <div class="stat-number" data-target="100">0</div>
+              <div class="stat-suffix">%</div>
+              <p class="stat-label">Client-Side Engine</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item" id="stat-3">
+              <div class="stat-number" data-target="0">0</div>
+              <div class="stat-suffix"></div>
+              <p class="stat-label">Server Uploads (Private)</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTENT BLOCK 1 (Unify your edits - Cyan Card) -->
+        <section class="block-container" id="unify-section">
+          <h2 class="block-title-large reveal-up">Direct In-Browser Architecture</h2>
+
+          <div class="content-block-cyan reveal-up" style="--reveal-delay: 100ms">
+            <div class="cyan-left">
+              <div class="cyan-item">
+                <h3>Browser-Native Canvas &amp; Video</h3>
+                <p>
+                  Your video files stay entirely on your device. Video frames are decoded locally,
+                  rendered to an HTML5 Canvas, and stylized with CSS and scanline filters.
+                </p>
+              </div>
+              <div class="cyan-item">
+                <h3>IndexedDB Project Persistence</h3>
+                <p>
+                  Work without fear of lost edits. Timeline clips, text titles, volume, and playback
+                  speed automatically persist in your browser's IndexedDB database.
+                </p>
+              </div>
+            </div>
+
+            <div class="cyan-right">
+              <div class="cyan-right-card" id="cyan-tilt-card">
+                <div class="card-header-bar">
+                  <span>Client-Side Pipeline</span>
+                  <span class="material-symbols-outlined">memory</span>
+                </div>
+
+                <div class="card-list-flow">
+                  <div class="flow-step flow-step-anim" style="--step-delay: 0ms">
+                    <span>01 Import Local Video</span>
+                    <span class="step-indicator step-cyan"></span>
+                  </div>
+                  <div class="flow-step flow-step-anim" style="--step-delay: 150ms">
+                    <span>02 Trim &amp; Add Titles</span>
+                    <span class="step-indicator step-pink"></span>
+                  </div>
+                  <div class="flow-step flow-step-anim" style="--step-delay: 300ms">
+                    <span>03 Render to WebM</span>
+                    <span class="step-indicator step-blue"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SCROLL STACK SECTION -->
+        <section class="scroll-stack-wrapper" id="scroll-stack-area" aria-label="How it works">
+          <div class="scroll-stack-header reveal-up" id="how-it-works">
+            <h2 class="block-title-large" style="margin-bottom: 0">How it works</h2>
+            <p class="scroll-stack-sub">Three simple steps to your finished video</p>
+          </div>
+
+          <div class="scroll-stack-sticky" id="scroll-stack-sticky">
+            <!-- Card 1 -->
+            <div class="stack-card stack-card-1" id="stack-card-1" data-index="0">
+              <div class="stack-card-inner">
+                <div class="stack-card-num">01</div>
+                <div class="stack-card-content">
+                  <div class="stack-card-icon">
+                    <span class="material-symbols-outlined" style="font-size: 40px"
+                      >folder_open</span
+                    >
+                  </div>
+                  <h3 class="stack-card-title">Load Raw Media</h3>
+                  <p class="stack-card-body">
+                    Select or drag &amp; drop an MP4 or WebM video file. The file is loaded directly
+                    into the browser via Blob Object URLs—no upload waits or external servers.
+                  </p>
+                </div>
+                <div class="stack-card-visual stack-visual-1">
+                  <div class="stack-visual-inner">
+                    <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3"
+                      >movie</span
+                    >
+                    <img
+                      src="/import.jpg"
+                      alt="Video media import interface"
+                      class="stack-visual-img"
+                      style="max-width: 100%; height: auto"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="stack-card stack-card-2" id="stack-card-2" data-index="1">
+              <div class="stack-card-inner">
+                <div class="stack-card-num">02</div>
+                <div class="stack-card-content">
+                  <div class="stack-card-icon">
+                    <span class="material-symbols-outlined" style="font-size: 40px">tune</span>
+                  </div>
+                  <h3 class="stack-card-title">Trim, Filter &amp; Overlay</h3>
+                  <p class="stack-card-body">
+                    Split clips at the playhead, delete segments, and apply 4 retro filters: CRT
+                    Scanlines, VHS Cyber, Neon Glitch, and Retro Mono. Add title text overlays with
+                    custom timestamps and neon styling.
+                  </p>
+                </div>
+                <div class="stack-card-visual stack-visual-2">
+                  <div class="stack-visual-inner">
+                    <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3"
+                      >tune</span
+                    >
+                    <img
+                      src="/editor.jpg"
+                      alt="Interactive retro editor interface with timeline"
+                      class="stack-visual-img"
+                      style="max-width: 100%; height: auto"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="stack-card stack-card-3" id="stack-card-3" data-index="2">
+              <div class="stack-card-inner">
+                <div class="stack-card-num">03</div>
+                <div class="stack-card-content">
+                  <div class="stack-card-icon">
+                    <span class="material-symbols-outlined" style="font-size: 40px">download</span>
+                  </div>
+                  <h3 class="stack-card-title">Export WebM &amp; Project JSON</h3>
+                  <p class="stack-card-body">
+                    Render canvas frames directly in your browser using the MediaRecorder API to
+                    produce a downloadable WebM video file, or backup your project configuration as
+                    a portable JSON file.
+                  </p>
+                </div>
+                <div class="stack-card-visual stack-visual-3">
+                  <div class="stack-visual-inner">
+                    <span class="material-symbols-outlined" style="font-size: 64px; opacity: 0.3"
+                      >file_download</span
+                    >
+                    <img
+                      src="/export.png"
+                      alt="Render and export progress modal"
+                      class="stack-visual-img"
+                      style="max-width: 100%; height: auto"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress dots -->
+          <div class="stack-progress" id="stack-progress" aria-hidden="true">
+            <div class="stack-dot stack-dot-active" data-index="0"></div>
+            <div class="stack-dot" data-index="1"></div>
+            <div class="stack-dot" data-index="2"></div>
+          </div>
+        </section>
+
+        <!-- CONTENT BLOCK 2 (Tactile Controls) -->
+        <section class="content-block-tactile" id="tactile-section">
+          <!-- Left Column: Locally hosted tactile asset -->
+          <div class="tactile-left reveal-left">
+            <div class="tactile-card" id="tactile-tilt-card">
+              <img
+                src="/tactile.jpg"
+                alt="Tactile video editing keyboard interface screenshot"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </div>
+
+          <!-- Right Column: Detail copy -->
+          <div class="tactile-right reveal-right" style="--reveal-delay: 100ms">
+            <div class="tactile-tag">Tactile Controls</div>
+            <h2 class="tactile-title">Keyboard Shortcuts &amp; Multi-Track Timeline</h2>
+            <h3 class="tactile-subtitle">Built for Speed and Accuracy</h3>
+            <p style="margin-bottom: 20px; color: var(--color-dark-grey); line-height: 1.6">
+              Navigate playback with Space to play/pause, Left and Right arrows to scrub ±1 second,
+              and the zoom slider (1x to 5x) for millisecond clip alignment.
+            </p>
+            <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-tactile-more">
+              <span class="btn-text-inner">
+                <span class="btn-label">Open Editor</span>
+                <span class="btn-label-clone">Open Editor</span>
+              </span>
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <!-- FINAL CTA SECTION -->
+      <section class="final-cta" id="cta-section">
+        <div class="cta-header-row">
+          <div class="lang-selector" role="button" aria-haspopup="true">
+            <span class="material-symbols-outlined" style="font-size: 16px">terminal</span>
+            <span>100% Client-Side</span>
+          </div>
+          <div class="made-by">Built by Sarthak Joshi</div>
+        </div>
+
+        <div class="cta-giant-text" id="cta-giant">SARJ</div>
+
+        <div class="cta-panel reveal-up">
+          <h2 class="cta-panel-title">Start editing in your browser</h2>
+          <p class="cta-panel-text">
+            No accounts, no cloud uploads, no subscriptions. Everything runs directly on your
+            machine.
+          </p>
+          <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-panel-cta">
+            <span class="btn-text-inner">
+              <span class="btn-label"
+                >Launch Studio Editor
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 18px; vertical-align: middle"
+                  >arrow_forward</span
+                ></span
+              >
+              <span class="btn-label-clone"
+                >Launch Studio Editor
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 18px; vertical-align: middle"
+                  >arrow_forward</span
+                ></span
+              >
+            </span>
+          </a>
+        </div>
       </section>
 
-    </main>
+      <!-- Footer -->
+      <footer class="footer" id="footer-section">
+        <div class="footer-content">
+          <!-- Footer Links Grid -->
+          <div class="footer-links-grid">
+            <div class="footer-col">
+              <h4 class="footer-col-title">Core Tools</h4>
+              <a href="/editor.html" class="footer-link">Timeline Studio</a>
+              <a href="/editor.html" class="footer-link">Canvas Filters</a>
+              <a href="/editor.html" class="footer-link">Title Overlays</a>
+              <a href="/editor.html" class="footer-link">WebM Renderer</a>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Filters</h4>
+              <span class="footer-link">CRT Scanlines</span>
+              <span class="footer-link">VHS Cyber</span>
+              <span class="footer-link">Neon Glitch</span>
+              <span class="footer-link">Retro Mono</span>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Tech Stack</h4>
+              <span class="footer-link">Vanilla JavaScript (ES Modules)</span>
+              <span class="footer-link">HTML5 Canvas API</span>
+              <span class="footer-link">IndexedDB ObjectStore</span>
+              <span class="footer-link">MediaRecorder API</span>
+            </div>
+            <div class="footer-col">
+              <h4 class="footer-col-title">Developer</h4>
+              <a
+                href="https://github.com/sarj428/neweditor"
+                target="_blank"
+                rel="noopener"
+                class="footer-link"
+                >GitHub Repository</a
+              >
+              <a
+                href="https://linkedin.com/in/sarthak-joshi-"
+                target="_blank"
+                rel="noopener"
+                class="footer-link"
+                >LinkedIn Profile</a
+              >
+              <a href="https://editingapp.netlify.app" class="footer-link">Live Production Site</a>
+            </div>
+          </div>
 
-    <!-- FINAL CTA SECTION -->
-    <section class="final-cta" id="cta-section">
-      <div class="cta-header-row">
-        <div class="lang-selector" role="button" aria-haspopup="true">
-          <span class="material-symbols-outlined" style="font-size: 16px;">terminal</span>
-          <span>100% Client-Side</span>
+          <!-- Footer Bottom Section -->
+          <div
+            class="footer-bottom-row"
+            style="
+              margin-top: 32px;
+              padding-top: 24px;
+              border-top: 1px solid rgba(0, 0, 0, 0.1);
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div
+              class="built-by-text"
+              style="font-family: var(--font-mono); font-size: 13px; color: var(--color-dark-grey)"
+            >
+              Designed &amp; Built by
+              <strong style="color: var(--color-accent-pink)">Sarthak Joshi</strong> · B.Tech
+              Computer Science &amp; Engineering
+            </div>
+
+            <div class="social-links">
+              <a
+                href="https://github.com/sarj428/neweditor"
+                target="_blank"
+                rel="noopener"
+                class="social-btn"
+                aria-label="GitHub"
+                ><span class="material-symbols-outlined">code</span></a
+              >
+              <a
+                href="https://linkedin.com/in/sarthak-joshi-"
+                target="_blank"
+                rel="noopener"
+                class="social-btn"
+                aria-label="LinkedIn"
+                ><span class="material-symbols-outlined">person</span></a
+              >
+              <a href="/editor.html" class="social-btn" aria-label="Open Studio"
+                ><span class="material-symbols-outlined">movie_creation</span></a
+              >
+            </div>
+          </div>
         </div>
-        <div class="made-by">Built by Sarthak Joshi</div>
-      </div>
+      </footer>
+    </div>
 
-      <div class="cta-giant-text" id="cta-giant">SARJ</div>
-
-      <div class="cta-panel reveal-up">
-        <h2 class="cta-panel-title">Start editing in your browser</h2>
-        <p class="cta-panel-text">No accounts, no cloud uploads, no subscriptions. Everything runs directly on your machine.</p>
-        <a href="/editor.html" class="btn btn-primary btn-animated" id="btn-panel-cta">
-          <span class="btn-text-inner">
-            <span class="btn-label">Launch Studio Editor <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">arrow_forward</span></span>
-            <span class="btn-label-clone">Launch Studio Editor <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">arrow_forward</span></span>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer" id="footer-section">
-      <div class="footer-content">
-
-        <!-- Footer Links Grid -->
-        <div class="footer-links-grid">
-          <div class="footer-col">
-            <h4 class="footer-col-title">Core Tools</h4>
-            <a href="/editor.html" class="footer-link">Timeline Studio</a>
-            <a href="/editor.html" class="footer-link">Canvas Filters</a>
-            <a href="/editor.html" class="footer-link">Title Overlays</a>
-            <a href="/editor.html" class="footer-link">WebM Renderer</a>
-          </div>
-          <div class="footer-col">
-            <h4 class="footer-col-title">Filters</h4>
-            <span class="footer-link">CRT Scanlines</span>
-            <span class="footer-link">VHS Cyber</span>
-            <span class="footer-link">Neon Glitch</span>
-            <span class="footer-link">Retro Mono</span>
-          </div>
-          <div class="footer-col">
-            <h4 class="footer-col-title">Tech Stack</h4>
-            <span class="footer-link">Vanilla JavaScript (ES Modules)</span>
-            <span class="footer-link">HTML5 Canvas API</span>
-            <span class="footer-link">IndexedDB ObjectStore</span>
-            <span class="footer-link">MediaRecorder API</span>
-          </div>
-          <div class="footer-col">
-            <h4 class="footer-col-title">Developer</h4>
-            <a href="https://github.com/sarj428/neweditor" target="_blank" rel="noopener" class="footer-link">GitHub Repository</a>
-            <a href="https://linkedin.com/in/sarthak-joshi-" target="_blank" rel="noopener" class="footer-link">LinkedIn Profile</a>
-            <a href="https://editingapp.netlify.app" class="footer-link">Live Production Site</a>
-          </div>
-        </div>
-
-        <!-- Footer Bottom Section -->
-        <div class="footer-bottom-row" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(0, 0, 0, 0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-          <div class="built-by-text" style="font-family: var(--font-mono); font-size: 13px; color: var(--color-dark-grey);">
-            Designed &amp; Built by <strong style="color: var(--color-accent-pink);">Sarthak Joshi</strong> · B.Tech Computer Science &amp; Engineering
-          </div>
-
-          <div class="social-links">
-            <a href="https://github.com/sarj428/neweditor" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub"><span
-                class="material-symbols-outlined">code</span></a>
-            <a href="https://linkedin.com/in/sarthak-joshi-" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn"><span
-                class="material-symbols-outlined">person</span></a>
-            <a href="/editor.html" class="social-btn" aria-label="Open Studio"><span
-                class="material-symbols-outlined">movie_creation</span></a>
-          </div>
-        </div>
-
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- Entry JavaScript file -->
-  <script type="module" src="/src/main.js"></script>
-</body>
-
+    <!-- Entry JavaScript file -->
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>

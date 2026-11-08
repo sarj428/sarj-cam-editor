@@ -43,11 +43,7 @@ import {
   drawCanvasFrame
 } from './editor/canvasRenderer.js';
 
-import {
-  startPlayback,
-  pausePlayback,
-  seekTimeline
-} from './editor/playback.js';
+import { startPlayback, pausePlayback, seekTimeline } from './editor/playback.js';
 
 import {
   getTotalTimelineDuration,
@@ -57,11 +53,7 @@ import {
   generateRulerTicks
 } from './editor/timeline.js';
 
-import {
-  createTextOverlay,
-  updateTextOverlay,
-  removeTextOverlay
-} from './editor/textOverlays.js';
+import { createTextOverlay, updateTextOverlay, removeTextOverlay } from './editor/textOverlays.js';
 
 import {
   setStatusText,
@@ -74,7 +66,6 @@ import {
 import { showNotification } from './editor/uiToast.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-
   /* ─────────────────────────────────────────────────────────
      1. DOM ELEMENT REFERENCES
      ───────────────────────────────────────────────────────── */
@@ -95,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Preview Workspace
   const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('editor-canvas'));
   const ctx = canvas.getContext('2d');
-  const hiddenVideo = /** @type {HTMLVideoElement} */ (document.getElementById('hidden-video-element'));
+  const hiddenVideo = /** @type {HTMLVideoElement} */ (
+    document.getElementById('hidden-video-element')
+  );
   const crtOverlay = document.getElementById('crt-overlay');
   const timecodeHUD = document.getElementById('live-timecode');
   const canvasLoadingSpinner = document.getElementById('canvas-loading-spinner');
@@ -112,7 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const hudTotalDuration = document.getElementById('hud-total-duration');
   const btnMute = document.getElementById('hud-btn-mute');
   const muteIcon = document.getElementById('mute-icon');
-  const volumeSlider = /** @type {HTMLInputElement} */ (document.getElementById('hud-volume-slider'));
+  const volumeSlider = /** @type {HTMLInputElement} */ (
+    document.getElementById('hud-volume-slider')
+  );
 
   // Sidebar Properties
   const aspectButtons = document.querySelectorAll('[data-ratio]');
@@ -122,16 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnAddText = document.getElementById('btn-add-text');
 
   // Exports
-  const btnRenderVideo = /** @type {HTMLButtonElement} */ (document.getElementById('btn-render-video'));
-  const btnExportProject = /** @type {HTMLButtonElement} */ (document.getElementById('btn-export-project'));
+  const btnRenderVideo = /** @type {HTMLButtonElement} */ (
+    document.getElementById('btn-render-video')
+  );
+  const btnExportProject = /** @type {HTMLButtonElement} */ (
+    document.getElementById('btn-export-project')
+  );
   const btnTriggerImport = document.getElementById('btn-trigger-import');
-  const projectImportInput = /** @type {HTMLInputElement} */ (document.getElementById('project-import-input'));
+  const projectImportInput = /** @type {HTMLInputElement} */ (
+    document.getElementById('project-import-input')
+  );
 
   // Timeline
-  const btnTimelineSplit = /** @type {HTMLButtonElement} */ (document.getElementById('btn-timeline-split'));
-  const btnTimelineDeleteClip = /** @type {HTMLButtonElement} */ (document.getElementById('btn-timeline-delete-clip'));
+  const btnTimelineSplit = /** @type {HTMLButtonElement} */ (
+    document.getElementById('btn-timeline-split')
+  );
+  const btnTimelineDeleteClip = /** @type {HTMLButtonElement} */ (
+    document.getElementById('btn-timeline-delete-clip')
+  );
   const btnTimelineClear = document.getElementById('btn-timeline-clear');
-  const timelineZoomSlider = /** @type {HTMLInputElement} */ (document.getElementById('timeline-zoom-slider'));
+  const timelineZoomSlider = /** @type {HTMLInputElement} */ (
+    document.getElementById('timeline-zoom-slider')
+  );
   const timelineScrollBox = document.getElementById('timeline-scroll-box');
   const timelineVessel = document.getElementById('timeline-vessel');
   const timelineRuler = document.getElementById('timeline-ruler-ticks');
@@ -145,10 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // Text Settings Modal
   const textSettingsModal = document.getElementById('text-settings-modal');
   const modalTextId = /** @type {HTMLInputElement} */ (document.getElementById('modal-text-id'));
-  const modalInputText = /** @type {HTMLInputElement} */ (document.getElementById('modal-input-text'));
-  const modalInputStart = /** @type {HTMLInputElement} */ (document.getElementById('modal-input-start'));
-  const modalInputEnd = /** @type {HTMLInputElement} */ (document.getElementById('modal-input-end'));
-  const modalInputFontSize = /** @type {HTMLInputElement} */ (document.getElementById('modal-input-font-size'));
+  const modalInputText = /** @type {HTMLInputElement} */ (
+    document.getElementById('modal-input-text')
+  );
+  const modalInputStart = /** @type {HTMLInputElement} */ (
+    document.getElementById('modal-input-start')
+  );
+  const modalInputEnd = /** @type {HTMLInputElement} */ (
+    document.getElementById('modal-input-end')
+  );
+  const modalInputFontSize = /** @type {HTMLInputElement} */ (
+    document.getElementById('modal-input-font-size')
+  );
   const modalFontSizeVal = document.getElementById('modal-font-size-val');
   const modalInputX = /** @type {HTMLInputElement} */ (document.getElementById('modal-input-x'));
   const modalXVal = document.getElementById('modal-x-val');
@@ -162,7 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Render Video Modal
   const renderOverlay = document.getElementById('editor-export-overlay');
   const renderStatusTitle = document.getElementById('render-status-title');
-  const renderExportCanvas = /** @type {HTMLCanvasElement} */ (document.getElementById('render-export-canvas'));
+  const renderExportCanvas = /** @type {HTMLCanvasElement} */ (
+    document.getElementById('render-export-canvas')
+  );
   const renderStatusIcon = document.getElementById('render-status-icon');
   const renderStatusMessage = document.getElementById('render-status-message');
   const renderStatusSubtitle = document.getElementById('render-status-subtitle');
@@ -190,7 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectStore().then(({ inMemory }) => {
     if (inMemory) {
       setStatusText('DB: OFFLINE (IN-MEMORY)', 'orange');
-      showNotification('IndexedDB is unavailable (private mode or disabled). Session will save in-memory only.', 'warning');
+      showNotification(
+        'IndexedDB is unavailable (private mode or disabled). Session will save in-memory only.',
+        'warning'
+      );
     } else {
       setStatusText('SYSTEM: ONLINE', 'green');
     }
@@ -242,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     timelineVessel.style.width = `${duration * pps}px`;
 
     const ticks = generateRulerTicks(duration, getZoomLevel());
-    ticks.forEach(t => {
+    ticks.forEach((t) => {
       const el = document.createElement('div');
       el.className = 'timeline-tick' + (t.isMajor ? ' major' : '');
       el.style.left = `${t.time * pps}px`;
@@ -255,8 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderTimelineSegments() {
     const proj = getCurrentProject();
-    videoTrackLane.querySelectorAll('.video-segment-block').forEach(el => el.remove());
-    textTrackLane.querySelectorAll('.text-segment-block').forEach(el => el.remove());
+    videoTrackLane.querySelectorAll('.video-segment-block').forEach((el) => el.remove());
+    textTrackLane.querySelectorAll('.text-segment-block').forEach((el) => el.remove());
 
     if (!proj.clips || proj.clips.length === 0) {
       videoPlaceholder.classList.remove('hidden');
@@ -273,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentX = 0;
 
     // 1. Video Clips Lane
-    proj.clips.forEach(clip => {
+    proj.clips.forEach((clip) => {
       const widthPx = clip.duration * pps;
       const block = document.createElement('div');
       block.className = 'video-segment-block';
@@ -297,12 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
       currentX += widthPx;
     });
 
-    btnTimelineDeleteClip.disabled = (getSelectedClipId() === null && getSelectedTextId() === null);
+    btnTimelineDeleteClip.disabled = getSelectedClipId() === null && getSelectedTextId() === null;
 
     // 2. Text Overlays Lane
     if (proj.texts && proj.texts.length > 0) {
       textPlaceholder.classList.add('hidden');
-      proj.texts.forEach(txt => {
+      proj.texts.forEach((txt) => {
         const leftPx = txt.start * pps;
         const widthPx = (txt.end - txt.start) * pps;
 
@@ -385,9 +405,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   timelineVessel.addEventListener('click', (e) => {
     const target = /** @type {HTMLElement} */ (e.target);
-    if (target.classList.contains('video-segment-block') ||
-        target.classList.contains('text-segment-block') ||
-        isScrubbing) return;
+    if (
+      target.classList.contains('video-segment-block') ||
+      target.classList.contains('text-segment-block') ||
+      isScrubbing
+    )
+      return;
     handleScrub(e);
   });
 
@@ -458,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('keydown', (e) => {
-    const tag = (e.target && /** @type {HTMLElement} */ (e.target).tagName || '').toLowerCase();
+    const tag = ((e.target && /** @type {HTMLElement} */ (e.target).tagName) || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
 
     if (e.code === 'Space') {
@@ -503,7 +526,8 @@ document.addEventListener('DOMContentLoaded', () => {
       dropZone.classList.add('hidden');
 
       const proj = getCurrentProject();
-      const fileName = customName || (blob instanceof File ? blob.name : proj.videoName || 'imported_clip.mp4');
+      const fileName =
+        customName || (blob instanceof File ? blob.name : proj.videoName || 'imported_clip.mp4');
 
       loadedVideoName.textContent = fileName;
       metaDuration.textContent = formatShortTime(duration);
@@ -514,12 +538,14 @@ document.addEventListener('DOMContentLoaded', () => {
         proj.videoName = fileName;
         proj.videoSize = blob.size;
         proj.videoDuration = duration;
-        proj.clips = [{
-          id: createId('clip'),
-          start: 0,
-          end: duration,
-          duration: duration
-        }];
+        proj.clips = [
+          {
+            id: createId('clip'),
+            start: 0,
+            end: duration,
+            duration: duration
+          }
+        ];
         proj.texts = [];
         saveCurrentProject();
       }
@@ -539,7 +565,10 @@ document.addEventListener('DOMContentLoaded', () => {
     hiddenVideo.onerror = (e) => {
       canvasLoadingSpinner.classList.add('hidden');
       setStatusText('DECODING ERROR', 'orange');
-      showNotification('Error decoding video file. Please ensure it is a valid HTML5 format (MP4/WebM).', 'error');
+      showNotification(
+        'Error decoding video file. Please ensure it is a valid HTML5 format (MP4/WebM).',
+        'error'
+      );
       console.error('[Decoder] Video element error:', e);
     };
   }
@@ -626,13 +655,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const proj = getCurrentProject();
     if (!proj.videoDuration) return;
 
-    if (confirm('Reset project timeline? This will restore the full video clip and remove titles.')) {
-      proj.clips = [{
-        id: createId('clip'),
-        start: 0,
-        end: proj.videoDuration,
-        duration: proj.videoDuration
-      }];
+    if (
+      confirm('Reset project timeline? This will restore the full video clip and remove titles.')
+    ) {
+      proj.clips = [
+        {
+          id: createId('clip'),
+          start: 0,
+          end: proj.videoDuration,
+          duration: proj.videoDuration
+        }
+      ];
       proj.texts = [];
       setSelectedClipId(null);
       setSelectedTextId(null);
@@ -649,7 +682,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ─────────────────────────────────────────────────────────
      8. ASPECT RATIO, SPEED & FILTER INSPECTORS
      ───────────────────────────────────────────────────────── */
-  aspectButtons.forEach(btn => {
+  aspectButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const ratio = btn.getAttribute('data-ratio');
       if (!ratio) return;
@@ -661,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  speedButtons.forEach(btn => {
+  speedButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const speedStr = btn.getAttribute('data-speed');
       if (!speedStr) return;
@@ -673,7 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  filterButtons.forEach(btn => {
+  filterButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const filter = btn.getAttribute('data-filter') || 'none';
       setActiveToggle(filterButtons, filter, 'filter');
@@ -702,7 +735,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    proj.texts.forEach(txt => {
+    proj.texts.forEach((txt) => {
       const item = document.createElement('div');
       item.className = 'text-overlay-pill';
 
@@ -762,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openTextModal(id) {
     const proj = getCurrentProject();
-    const item = proj.texts.find(t => t.id === id);
+    const item = proj.texts.find((t) => t.id === id);
     if (!item) return;
 
     modalTextId.value = item.id;
@@ -776,7 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modalInputY.value = String(item.y !== undefined ? item.y : 50);
     modalYVal.textContent = (item.y !== undefined ? item.y : 50) + '%';
 
-    modalColorButtons.forEach(btn => {
+    modalColorButtons.forEach((btn) => {
       btn.classList.toggle('active', btn.getAttribute('data-color') === item.color);
     });
 
@@ -804,9 +837,9 @@ document.addEventListener('DOMContentLoaded', () => {
     modalYVal.textContent = modalInputY.value + '%';
   });
 
-  modalColorButtons.forEach(btn => {
+  modalColorButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      modalColorButtons.forEach(b => b.classList.remove('active'));
+      modalColorButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
     });
   });
@@ -901,8 +934,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     videoPlaceholder.classList.remove('hidden');
     textPlaceholder.classList.remove('hidden');
-    videoTrackLane.querySelectorAll('.video-segment-block').forEach(el => el.remove());
-    textTrackLane.querySelectorAll('.text-segment-block').forEach(el => el.remove());
+    videoTrackLane.querySelectorAll('.video-segment-block').forEach((el) => el.remove());
+    textTrackLane.querySelectorAll('.text-segment-block').forEach((el) => el.remove());
     activeTextOverlaysList.innerHTML = '<p class="no-items-text">No text overlays added yet.</p>';
 
     hudCurrentTime.textContent = '00:00.00';
@@ -941,14 +974,17 @@ document.addEventListener('DOMContentLoaded', () => {
       resetUIForEmptyProject();
       dropZone.classList.remove('hidden');
       loadedVideoContainer.classList.add('hidden');
-      showNotification(`Project "${proj.name}" loaded. Please re-select the source video to sync timeline.`, 'info');
+      showNotification(
+        `Project "${proj.name}" loaded. Please re-select the source video to sync timeline.`,
+        'info'
+      );
     }
 
     renderActiveTextOverlaysUI();
   }
 
   function refreshProjectsList() {
-    getAllProjects().then(projects => {
+    getAllProjects().then((projects) => {
       projectsDbList.innerHTML = '';
       if (!projects || projects.length === 0) {
         projectsDbList.innerHTML = `
@@ -959,7 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      projects.forEach(p => {
+      projects.forEach((p) => {
         const item = document.createElement('div');
         item.className = 'db-project-item';
 
@@ -986,7 +1022,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-icon-sm delete';
         deleteBtn.setAttribute('aria-label', `Delete project ${p.name}`);
-        deleteBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">delete</span>';
+        deleteBtn.innerHTML =
+          '<span class="material-symbols-outlined" style="font-size:16px;">delete</span>';
         deleteBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           if (confirm(`Delete project "${p.name}"?`)) {
@@ -1032,7 +1069,8 @@ document.addEventListener('DOMContentLoaded', () => {
       exportedAt: new Date().toISOString()
     };
 
-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(payload, null, 2));
+    const dataStr =
+      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(payload, null, 2));
     const dl = document.createElement('a');
     dl.setAttribute('href', dataStr);
     dl.setAttribute('download', `${proj.name.toLowerCase().replace(/\s+/g, '_')}_project.json`);
@@ -1078,7 +1116,11 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProject(imported).then(() => {
           loadProjectIntoWorkspace(imported);
           refreshProjectsList();
-          showNotification(`Project "${imported.name}" loaded from JSON. Please select "${imported.videoName}" to sync video frames.`, 'info', 6000);
+          showNotification(
+            `Project "${imported.name}" loaded from JSON. Please select "${imported.videoName}" to sync video frames.`,
+            'info',
+            6000
+          );
         });
       } catch (err) {
         showNotification(`Failed to parse project JSON: ${err.message}`, 'error');
@@ -1113,8 +1155,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProgressPercent.textContent = '0%';
     renderStatusTitle.textContent = 'RENDERING TAPE';
     renderStatusMessage.textContent = 'Rendering retro frames...';
-    renderStatusSubtitle.textContent = 'Recording canvas frames to WebM. Keep this browser window focused.';
-    renderStatusIcon.innerHTML = '<span class="material-symbols-outlined spinning-icon">sync</span>';
+    renderStatusSubtitle.textContent =
+      'Recording canvas frames to WebM. Keep this browser window focused.';
+    renderStatusIcon.innerHTML =
+      '<span class="material-symbols-outlined spinning-icon">sync</span>';
 
     if (activeRenderVideoUrl) {
       URL.revokeObjectURL(activeRenderVideoUrl);
@@ -1139,7 +1183,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderStatusTitle.textContent = 'RENDER COMPLETE';
         renderStatusMessage.textContent = 'Project successfully compiled!';
         renderStatusSubtitle.textContent = 'Ready for digital download.';
-        renderStatusIcon.innerHTML = '<span class="material-symbols-outlined" style="color:#2ddbde; font-size:64px;">check_circle</span>';
+        renderStatusIcon.innerHTML =
+          '<span class="material-symbols-outlined" style="color:#2ddbde; font-size:64px;">check_circle</span>';
         renderDoneActions.classList.remove('hidden');
         showNotification('WebM video render completed successfully!', 'success');
       },
@@ -1183,13 +1228,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawerTabContents = document.querySelectorAll('.drawer-tab-content');
   const editorDrawer = document.getElementById('editor-drawer');
 
-  dockBtns.forEach(btn => {
+  dockBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       const targetTab = btn.getAttribute('data-tab');
       const isAlreadyActive = btn.classList.contains('active');
 
-      dockBtns.forEach(b => b.classList.remove('active'));
-      drawerTabContents.forEach(t => t.classList.remove('active'));
+      dockBtns.forEach((b) => b.classList.remove('active'));
+      drawerTabContents.forEach((t) => t.classList.remove('active'));
 
       if (isAlreadyActive) {
         editorDrawer.classList.add('collapsed');
@@ -1201,5 +1246,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
 });
