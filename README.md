@@ -2,6 +2,7 @@
 
 > Browser-based retro video editor built with HTML5 Canvas, the Web MediaStream Recording API, and IndexedDB.
 
+[![CI](https://github.com/sarj428/sarj-cam-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/sarj428/sarj-cam-editor/actions)
 [![Live Demo](https://img.shields.io/badge/Demo-editingapp.netlify.app-00ad9f?style=flat-square)](https://editingapp.netlify.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Vanilla JS](https://img.shields.io/badge/Vanilla_JS-ES_Modules-F7DF1E?logo=javascript&logoColor=black&style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
