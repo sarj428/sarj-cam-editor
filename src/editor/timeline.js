@@ -150,3 +150,4 @@ export function generateRulerTicks(duration, zoomLevel) {
   }
   return ticks;
 }
+

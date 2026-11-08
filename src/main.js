@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Trigger animation after a brief delay
     requestAnimationFrame(() => {
       setTimeout(() => {
-        headline.querySelectorAll('.hero-char').forEach((el, i) => {
+        headline.querySelectorAll('.hero-char').forEach((el) => {
           el.classList.remove('char-hidden');
           el.classList.add('char-visible');
         });

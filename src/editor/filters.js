@@ -71,3 +71,4 @@ export function renderScanlines(ctx, width, height, lineSpacing = 3, alpha = 0.1
   }
   ctx.restore();
 }
+

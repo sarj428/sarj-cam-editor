@@ -4,7 +4,6 @@
 
 /** @type {HTMLElement|null} */
 let toastContainer = null;
-let currentTimer = null;
 
 /**
  * Creates or retrieves the singleton notification container element.
@@ -105,3 +104,4 @@ export function showNotification(message, type = 'info', duration = 4500) {
 
   container.appendChild(toast);
 }
+

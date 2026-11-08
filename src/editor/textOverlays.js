@@ -111,3 +111,4 @@ export function handleModalFocusTrap(modalElement, e) {
     }
   }
 }
+

@@ -7,7 +7,7 @@ import './style.css';
 
 // Utilities
 import { formatTime, formatShortTime, formatBytes, padZero } from './utils/formatters.js';
-import { validateVideoFile, validateTimeRange, validateProjectJson } from './utils/validation.js';
+import { validateVideoFile, validateProjectJson } from './utils/validation.js';
 import { createId } from './utils/ids.js';
 
 // Storage
@@ -62,11 +62,6 @@ import {
   updateTextOverlay,
   removeTextOverlay
 } from './editor/textOverlays.js';
-
-import {
-  checkRenderSupport,
-  startExportRender
-} from './editor/exportRender.js';
 
 import {
   setStatusText,
@@ -1094,12 +1089,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ─────────────────────────────────────────────────────────
-     12. CANVAS WEBM VIDEO RENDER ENGINE
+     12. CANVAS WEBM VIDEO RENDER ENGINE (DYNAMIC IMPORT)
      ───────────────────────────────────────────────────────── */
-  btnRenderVideo.addEventListener('click', () => {
+  btnRenderVideo.addEventListener('click', async () => {
     const proj = getCurrentProject();
     if (!proj.videoBlob && !hiddenVideo.src) return;
 
+    // Dynamically load the export engine module on-demand
+    const { checkRenderSupport, startExportRender } = await import('./editor/exportRender.js');
     const support = checkRenderSupport();
     if (!support.supported) {
       showNotification(support.error || 'MediaRecorder unsupported in this browser.', 'error');

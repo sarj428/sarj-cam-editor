@@ -154,7 +154,10 @@ export function setVideoSourceUrl(url) {
   if (videoSourceUrl && videoSourceUrl !== url) {
     try {
       URL.revokeObjectURL(videoSourceUrl);
-    } catch (_) {}
+    } catch {
+      // Ignore URL revocation errors on discarded object URLs
+    }
   }
   videoSourceUrl = url;
 }
+

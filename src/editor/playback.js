@@ -107,3 +107,4 @@ export function seekTimeline(targetTime, videoElement, project, onRenderFrame) {
 
   if (onRenderFrame) onRenderFrame();
 }
+

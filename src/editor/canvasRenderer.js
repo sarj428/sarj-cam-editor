@@ -163,3 +163,4 @@ export function drawCanvasFrame(ctx, canvas, videoElement, project, playheadTime
   // Draw active title overlays on top
   drawTextOverlays(ctx, project.texts, playheadTime, canvas.width, canvas.height);
 }
+

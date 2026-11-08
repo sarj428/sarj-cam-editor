@@ -83,3 +83,4 @@ export function validateProjectJson(config) {
 
   return { isValid: true };
 }
+
