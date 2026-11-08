@@ -7,16 +7,27 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and build outputs
 node_modules
 dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Stitch template artifacts & archives
+stitch/
+stitch.zip
+
+# Editor directories and system files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
